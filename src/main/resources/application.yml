@@ -1,0 +1,24 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: ratel
+  profiles:
+    active: prod
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5000MB
+      max-request-size: 5000MB
+  sendgrid:
+    api-key: 'your_key'
+
+app:
+  jwt:
+    secret: javamaster
+  email:
+    text: Follow the link for
+    domain: http://localhost:8083/app/shop/free
+  file:
+    path-image: files/images
+    path-video: files/video
