@@ -22,16 +22,16 @@ public interface CategoryController {
     ResponseEntity<CategoryResponse> findById(@RequestParam Long id);
 
     @GetMapping("category/admin/id")
-    ResponseEntity<CategoryResponse> getById(@RequestParam Long id);
+    ResponseEntity<CategoryResponse> getByIdForAdmin(@RequestParam Long id);
 
     @GetMapping("free/category/name")
     ResponseEntity<CategoryResponse> findByName(@RequestParam String name);
 
-    @PostMapping("category/create")
-    ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest categoryRequest);
+    @PostMapping("category/create/{updateName}")
+    ResponseEntity<CategoryResponse> createCategory(@RequestParam String updateName);
 
     @PutMapping("category/update")
-    ResponseEntity<CategoryResponse> updateCategory(@RequestBody CategoryRequest categoryRequest, @RequestParam long id);
+    ResponseEntity<CategoryResponse> updateCategory(@RequestParam String updateName, @RequestParam long id);
 
     @DeleteMapping("category/delete")
     ResponseEntity<MessageResponse> deleteCategory (@RequestParam long id);

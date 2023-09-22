@@ -25,9 +25,9 @@ public class AddressResponse {
 
     private String street;
 
-    private int houseNumber;
+    private String houseNumber;
 
-    private int apartmentNumber;
+    private String apartmentNumber;
 
     private List<UserResponse> userAddress = new ArrayList<>();
 
@@ -41,8 +41,8 @@ public class AddressResponse {
                            String country,
                            String city,
                            String street,
-                           int houseNumber,
-                           int apartmentNumber,
+                           String houseNumber,
+                           String apartmentNumber,
                            Date createdDate,
                            Date lastModifiedDate
     ) {

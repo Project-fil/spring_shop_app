@@ -33,8 +33,4 @@ public class CategoryTransferObj {
         );
     }
 
-    public static Category toCategory(CategoryRequest payload) {
-        return new Category(payload.getName());
-    }
-
 }

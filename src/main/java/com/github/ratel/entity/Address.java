@@ -48,11 +48,11 @@ public class Address implements Serializable {
     @Column(name = "street", columnDefinition = "TEXT")
     private String street;
 
-    @Column(name = "houseNumber", columnDefinition = "INT")
-    private int houseNumber;
+    @Column(name = "houseNumber", columnDefinition = "TEXT")
+    private String houseNumber;
 
-    @Column(name = "apartmentNumber", columnDefinition = "INT")
-    private int apartmentNumber;
+    @Column(name = "apartmentNumber", columnDefinition = "TEXT")
+    private String apartmentNumber;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "address")

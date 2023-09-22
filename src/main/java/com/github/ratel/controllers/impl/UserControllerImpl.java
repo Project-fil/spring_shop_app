@@ -68,15 +68,23 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
 
     @Override
     public ResponseEntity<UserResponse> getUserByIdForAdmin(Long userId) {
-        return ResponseEntity.ok(UserTransferObj.fromUser(this.userService.findUserForAdmin(userId)));
+        User getUser = null;
+        try {
+            getUser = this.userService.findById(userId);
+        } catch (Exception ignore) {}
+        if (Objects.isNull(getUser)) {
+            getUser = this.userService.findUserForAdmin(userId);
+        }
+        return ResponseEntity.ok(UserTransferObj.fromUser(getUser));
     }
 
     @Override
-    @CrossOrigin("*")
     @Transactional
+    @CrossOrigin("*")
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<UserResponse> update(UserUpdateRequest updateRequest, MultipartFile image) {
         User user = this.userService.findById(updateRequest.getId());
-        UserTransferObj.updateUser(user, updateRequest);// test for save address
+        UserTransferObj.updateUser(user, updateRequest);
         FileEntity fileEntity = null;
         if (Objects.nonNull(image)) {
             fileEntity = this.fileHandler.writeFile(image);

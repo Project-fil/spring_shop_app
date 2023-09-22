@@ -17,11 +17,11 @@ public class ProductRequest {
 
     private String description;
 
-    private BigDecimal price;
+    private String price;
 
     private String brand;
 
-    private int quantity;
+    private String quantity;
 
     private long subcategoryId;
 

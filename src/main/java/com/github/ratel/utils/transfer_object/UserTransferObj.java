@@ -3,6 +3,7 @@ package com.github.ratel.utils.transfer_object;
 import com.github.ratel.entity.User;
 import com.github.ratel.payload.request.UserUpdateRequest;
 import com.github.ratel.payload.response.UserResponse;
+import com.github.ratel.utils.UserUtil;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -19,7 +20,7 @@ public class UserTransferObj {
                 data.getRoles(),
                 data.getVerification(),
                 data.isRemoved()
-                );
+        );
     }
 
     public static UserResponse fromUserWithoutAddress(User data) {
@@ -35,32 +36,14 @@ public class UserTransferObj {
     }
 
     public static void updateUser(User user, UserUpdateRequest payload) {
-        user.setFirstname(payload.getFirstname());
-        user.setLastname(payload.getLastname());
-        user.getAddress().setPhone(payload.getPhone());
-        user.getAddress().setCountry(payload.getCountry());
-        user.getAddress().setCity(payload.getCity());
-        user.getAddress().setStreet(payload.getStreet());
-        user.getAddress().setHouseNumber(payload.getHouseNumber());
-        user.getAddress().setApartmentNumber(payload.getApartmentNumber());
+        user.setFirstname(UserUtil.updateField(user.getFirstname(), payload.getFirstname()));
+        user.setLastname(UserUtil.updateField(user.getLastname(), payload.getLastname()));
+        user.getAddress().setPhone(UserUtil.updateField(user.getAddress().getPhone(), payload.getPhone()));
+        user.getAddress().setCountry(UserUtil.updateField(user.getAddress().getCountry(), payload.getCountry()));
+        user.getAddress().setCity(UserUtil.updateField(user.getAddress().getCity(), payload.getCity()));
+        user.getAddress().setStreet(UserUtil.updateField(user.getAddress().getStreet(), payload.getStreet()));
+        user.getAddress().setHouseNumber(UserUtil.updateField(user.getAddress().getHouseNumber(), payload.getHouseNumber()));
+        user.getAddress().setApartmentNumber(UserUtil.updateField(user.getAddress().getApartmentNumber(), payload.getApartmentNumber()));
     }
-
-//    public static List<UserDto> toAllDto(List<User> users) {
-//        List<UserDto> convertToDto = new ArrayList<>();
-//        for (User user : users) {
-//            convertToDto.add(toDto(user));
-//        }
-//        return convertToDto;
-//    }
-
-//    public static UserDto toDto(User user) {
-////        Set<RoleDto> roleDTO = toDTO(user.getRoles());
-//        return new UserDto(
-//                user.getFirstname(),
-//                user.getLastname(),
-//                user.getEmail(),
-//                user.getPassword()
-//        );
-//    }
 
 }

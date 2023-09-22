@@ -52,13 +52,13 @@ public class ForgotPasswordController {
             );
             this.sendGridMailService.sendMessage(
                     user.getEmail(),
-                    "Замена пароля App_Shop",
+                    "Change Password App_Shop",
                     this.emailText.confirmPass(user.getFirstname(), user.getLastname(), token)
             );
         } else {
             throw new WrongUserEmail(StatusCode.WRONG_USER_EMAIL);
         }
-        return ResponseEntity.ok(new MessageResponse("Для подтверждения пароля воспользуйтесь електронной почтой"));
+        return ResponseEntity.ok(new MessageResponse("Use your email to confirm your password"));
     }
 
     @GetMapping("free/password")
@@ -68,12 +68,12 @@ public class ForgotPasswordController {
         if (!ct.isRemoved()) {
             User user = ct.getUser();
             if (user.isRemoved()) {
-                throw new EntityNotFoundException("Нет такого пользователя");
+                throw new EntityNotFoundException("No such user");
             }
             this.userService.updateUser(user.newPass(ct.getNewPass()));
         } else {
-            throw new InvalidTokenException("Неверный токен");
+            throw new InvalidTokenException("Invalid token");
         }
-        return ResponseEntity.status(200).body(new MessageResponse("Изменение пароля прошло успешно"));
+        return ResponseEntity.status(200).body(new MessageResponse("Password change was successful"));
     }
 }

@@ -65,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
     public User verificationUser(String token) {
         VerificationToken vt = verificationTokenService.findByToken(token);
         User user = vt.getUser();
-        this.userService.updateUser(user.verificationUser(UserVerificationStatus.VERIFIED));
+        this.userService.updateUser(user.setVerificationUser(UserVerificationStatus.VERIFIED));
         return user;
     }
 

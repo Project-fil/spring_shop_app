@@ -118,7 +118,7 @@ public class User implements Serializable {
         return this;
     }
 
-    public User verificationUser(UserVerificationStatus verification) {
+    public User setVerificationUser(UserVerificationStatus verification) {
         this.verification = verification;
         return this;
     }

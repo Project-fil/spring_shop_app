@@ -71,7 +71,14 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<ProductResponse> findByIdForAdmin(long id) {
-        return ResponseEntity.ok(ProductTransferObj.fromProduct(this.productService.findByIdForAdmin(id)));
+        Product getProduct = null;
+        try {
+            getProduct = this.productService.findById(id);
+        }catch (Exception ignore) {}
+        if (Objects.isNull(getProduct)) {
+            getProduct = this.productService.findByIdForAdmin(id);
+        }
+        return ResponseEntity.ok(ProductTransferObj.fromProduct(getProduct));
     }
 
     @Override
@@ -83,7 +90,14 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<ProductResponse> findByVendorCodeForAdmin(String code) {
-        return ResponseEntity.ok(ProductTransferObj.fromProduct(this.productService.findByVendorCodeForAdmin(code)));
+        Product getProduct = null;
+        try {
+            getProduct = this.productService.findByVendorCode(code);
+        }catch (Exception ignore) {}
+        if (Objects.isNull(getProduct)) {
+            getProduct = this.productService.findByVendorCodeForAdmin(code);
+        }
+        return ResponseEntity.ok(ProductTransferObj.fromProduct(getProduct));
     }
 
     @Override
@@ -99,14 +113,16 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
         }
         product.setFiles(newFiles);
         product.setSubcategory(subcategory);
-        return ResponseEntity.ok(ProductTransferObj.fromProduct(this.productService.create(product)));
+        product = this.productService.create(product);
+        return ResponseEntity.ok(ProductTransferObj.fromProduct(product));
     }
 
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<ProductResponse> update(ProductRequest productRequest) {
-        return null;
+
+        return ResponseEntity.ok(ProductTransferObj.fromProduct(null));
     }
 
     @Override

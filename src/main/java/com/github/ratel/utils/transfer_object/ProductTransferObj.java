@@ -7,6 +7,7 @@ import com.github.ratel.payload.response.CommentResponse;
 import com.github.ratel.payload.response.ProductResponse;
 import lombok.experimental.UtilityClass;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,8 +38,8 @@ public class ProductTransferObj {
         product.setVendorCode(payload.getVendorCode());
         product.setDescription(payload.getDescription());
         product.setBrand(payload.getBrand());
-        product.setPrice(payload.getPrice());
-        product.setQuantity(payload.getQuantity());
+        product.setPrice(BigDecimal.valueOf(Double.parseDouble(payload.getPrice())));
+        product.setQuantity(Integer.parseInt(payload.getQuantity()));
         return product;
     }
 

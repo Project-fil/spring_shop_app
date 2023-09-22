@@ -15,6 +15,7 @@ import com.github.ratel.services.AuthService;
 import com.github.ratel.utils.transfer_object.UserTransferObj;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,13 @@ import javax.validation.Valid;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/app/shop/")
-@RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    @Autowired
+    private AuthService authService;
 
-    private final JwtTokenProvider tokenProvider;
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
     @PostMapping("free/create/admin")
     public ResponseEntity<Object> registrationAdmin(@RequestBody @Valid CreateUserRequest payload) {

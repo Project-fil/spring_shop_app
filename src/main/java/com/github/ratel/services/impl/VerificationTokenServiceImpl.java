@@ -5,15 +5,16 @@ import com.github.ratel.exceptions.statuscode.StatusCode;
 import com.github.ratel.repositories.VerificationTokenRepository;
 import com.github.ratel.services.VerificationTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.ratel.exceptions.EntityNotFoundException;
 
 @Service
-@RequiredArgsConstructor
 public class VerificationTokenServiceImpl implements VerificationTokenService {
 
-    private final VerificationTokenRepository tokenRepository;
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
 
     @Override
     public VerificationToken create(VerificationToken token) {

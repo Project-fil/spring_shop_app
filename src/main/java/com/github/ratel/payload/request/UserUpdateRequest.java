@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserUpdateRequest {
 
-    private Long id;
+    private long id;
 
     private String firstname;
 
@@ -23,8 +23,8 @@ public class UserUpdateRequest {
 
     private String street;
 
-    private int houseNumber;
+    private String houseNumber;
 
-    private int apartmentNumber;
+    private String apartmentNumber;
 
 }

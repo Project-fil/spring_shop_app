@@ -10,6 +10,7 @@ import com.github.ratel.services.CategoryService;
 import com.github.ratel.utils.transfer_object.CategoryTransferObj;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,8 +57,17 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
     }
 
     @Override
-    public ResponseEntity<CategoryResponse> getById(Long id) {
-        return ResponseEntity.ok(CategoryTransferObj.fromCategory(this.categoryService.getByIdForAdmin(id)));
+    @CrossOrigin("*")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<CategoryResponse> getByIdForAdmin(Long id) {
+        Category getCategory = null;
+        try {
+            getCategory = this.categoryService.findById(id);
+        } catch (Exception ignore) {}
+        if (Objects.isNull(getCategory)) {
+            getCategory = this.categoryService.getByIdForAdmin(id);
+        }
+        return ResponseEntity.ok(CategoryTransferObj.fromCategory(getCategory));
     }
 
     @Override
@@ -68,18 +79,18 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<CategoryResponse> createCategory(CategoryRequest categoryRequest) {
+    public ResponseEntity<CategoryResponse> createCategory(String updateName) {  // TODO: 20.09.2023 testing fot change class to string
         return ResponseEntity.ok(CategoryTransferObj.fromCategory(
-                this.categoryService.createCategory(CategoryTransferObj.toCategory(categoryRequest)))
+                this.categoryService.createCategory(new Category(updateName)))
         );
     }
 
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<CategoryResponse> updateCategory(CategoryRequest categoryRequest, long id) {
+    public ResponseEntity<CategoryResponse> updateCategory(String updateName, long id) {  // TODO: 20.09.2023 testing fot change class to string
         Category category = this.categoryService.findById(id);
-        category.setName(categoryRequest.getName());
+        category.setName(updateName);
         return ResponseEntity.ok(CategoryTransferObj.fromCategory(this.categoryService.updateCategory(category)));
     }
 

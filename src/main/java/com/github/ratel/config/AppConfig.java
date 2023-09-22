@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                 url = "http://localhost:8083/",
                 description = "localhost"
         )
-)
+)   //  http://localhost:8083/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "com.github.ratel.repositories")
 @EntityScan(basePackages = "com.github.ratel.entity")

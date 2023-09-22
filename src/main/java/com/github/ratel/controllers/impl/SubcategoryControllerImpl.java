@@ -14,12 +14,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -45,6 +47,8 @@ public class SubcategoryControllerImpl implements ApiSecurityHeader, Subcategory
     }
 
     @Override
+    @CrossOrigin("*")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<List<SubcategoryResponse>> readAllForAdmin(long categoryId) {
         Category category = this.categoryService.findById(categoryId);
         return ResponseEntity.ok(this.subcategoryService.findByAllForAdmin(category).stream()
@@ -69,17 +73,32 @@ public class SubcategoryControllerImpl implements ApiSecurityHeader, Subcategory
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<SubcategoryResponse> getByIdForAdmin(long id) {
-        return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(this.subcategoryService.getById(id)));
+        Subcategory getSubcategory = null;
+        try {
+            getSubcategory = this.subcategoryService.findById(id);
+        } catch (Exception ignore) {}
+        if (Objects.isNull(getSubcategory)) {
+            getSubcategory = this.subcategoryService.getById(id);
+        }
+        return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(getSubcategory));
     }
 
     @Override
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<SubcategoryResponse> getByNameForAdmin(String name) {
-        return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(this.subcategoryService.getByName(name)));
+        Subcategory getByName = null;
+        try {
+            getByName = this.subcategoryService.findByName(name);
+        }catch (Exception ignore) {}
+        if (Objects.isNull(getByName)) {
+            getByName = this.subcategoryService.getByName(name);
+        }
+        return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(getByName));
     }
 
     @Override
+    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<SubcategoryResponse> createSubcategory(SubcategoryRequest subcategoryRequest) {
