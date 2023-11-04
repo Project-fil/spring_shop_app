@@ -27,7 +27,6 @@ public class ProductTransferObj {
                 payload.getSubcategory().getName(),
                 payload.getBrand(),
                 checkComment(payload.getComments()),
-                payload.isRemoved(),
                 payload.getCratedAt(),
                 payload.getUpdatedAt()
         );

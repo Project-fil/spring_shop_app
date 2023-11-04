@@ -40,8 +40,9 @@ public class FileHandler {
         } else {
             throw new FileTypeException("Format error");
         }
-        filePath += "/" + fileName;
         try {
+            Files.createDirectories(Paths.get(filePath));
+            filePath += "/" + fileName;
             byte[] bytes = file.getBytes();
             Path path = Paths.get(filePath);
             Files.write(path, bytes);

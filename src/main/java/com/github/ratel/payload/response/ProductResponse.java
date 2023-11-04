@@ -34,8 +34,6 @@ public class ProductResponse {
 
     private Set<CommentResponse> comments;
 
-    private boolean removed;
-
     private Date cratedAt;
 
     private Date updatedAt;
