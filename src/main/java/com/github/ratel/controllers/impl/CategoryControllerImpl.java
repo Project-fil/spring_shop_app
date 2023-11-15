@@ -3,14 +3,12 @@ package com.github.ratel.controllers.impl;
 import com.github.ratel.controllers.ApiSecurityHeader;
 import com.github.ratel.controllers.interfaces.CategoryController;
 import com.github.ratel.entity.Category;
-import com.github.ratel.payload.request.CategoryRequest;
 import com.github.ratel.payload.response.CategoryResponse;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.services.CategoryService;
 import com.github.ratel.utils.transfer_object.CategoryTransferObj;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -72,25 +70,19 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
 
     @Override
     @CrossOrigin("*")
-    public ResponseEntity<CategoryResponse> findByName(String name) {
-        return ResponseEntity.ok(CategoryTransferObj.fromCategory(this.categoryService.findCategoryByName(name)));
-    }
-
-    @Override
-    @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<CategoryResponse> createCategory(String updateName) {  // TODO: 20.09.2023 testing fot change class to string
+    public ResponseEntity<CategoryResponse> createCategory(String name) {  // TODO: 20.09.2023 testing for change class to string
         return ResponseEntity.ok(CategoryTransferObj.fromCategory(
-                this.categoryService.createCategory(new Category(updateName)))
+                this.categoryService.createCategory(new Category(name)))
         );
     }
 
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<CategoryResponse> updateCategory(String updateName, long id) {  // TODO: 20.09.2023 testing fot change class to string
+    public ResponseEntity<CategoryResponse> updateCategory(long id, String name) {  // TODO: 20.09.2023 testing for change class to string
         Category category = this.categoryService.findById(id);
-        category.setName(updateName);
+        category.setName(name);
         return ResponseEntity.ok(CategoryTransferObj.fromCategory(this.categoryService.updateCategory(category)));
     }
 

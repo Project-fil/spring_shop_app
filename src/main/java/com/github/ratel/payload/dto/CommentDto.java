@@ -1,4 +1,4 @@
-package com.github.ratel.dto;
+package com.github.ratel.payload.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

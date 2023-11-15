@@ -62,21 +62,6 @@ public class Subcategory implements Serializable {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    public Subcategory(String name) {
-        this.name = name;
-    }
-
-    public Subcategory(String name, Category category) {
-        this.name = name;
-        this.category = category;
-    }
-
-    public Subcategory(String name, Category category, List<Product> products) {
-        this.name = name;
-        this.category = category;
-        this.products = products;
-    }
-
     public void addProduct(Product product) {
         if (this.products.isEmpty())
             this.products = new ArrayList<>();

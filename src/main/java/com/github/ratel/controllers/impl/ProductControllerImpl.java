@@ -56,7 +56,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     public ResponseEntity<List<ProductResponse>> findAllForAdmin() {
         return ResponseEntity.ok(
                 this.productService.findAllForAdmin().stream()
-                .map(ProductTransferObj::fromProduct)
+                .map(ProductTransferObj::fromProductForAdmin)
                 .collect(Collectors.toList())
         );
     }
@@ -78,7 +78,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
         if (Objects.isNull(getProduct)) {
             getProduct = this.productService.findByIdForAdmin(id);
         }
-        return ResponseEntity.ok(ProductTransferObj.fromProduct(getProduct));
+        return ResponseEntity.ok(ProductTransferObj.fromProductForAdmin(getProduct));
     }
 
     @Override
@@ -97,7 +97,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
         if (Objects.isNull(getProduct)) {
             getProduct = this.productService.findByVendorCodeForAdmin(code);
         }
-        return ResponseEntity.ok(ProductTransferObj.fromProduct(getProduct));
+        return ResponseEntity.ok(ProductTransferObj.fromProductForAdmin(getProduct));
     }
 
     @Override

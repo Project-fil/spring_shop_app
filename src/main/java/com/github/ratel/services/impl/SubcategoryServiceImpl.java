@@ -23,7 +23,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
 
     @Override
     public List<Subcategory> findByAllForAdmin(Category category) {
-        return this.subcategoryRepository.findAllByCategoryAndRemovedFalse(category);
+        return this.subcategoryRepository.findAllByCategoryAndRemovedTrue(category);
     }
 
     @Override
@@ -34,19 +34,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
 
     @Override
     public Subcategory getById(long id) {
-        return this.subcategoryRepository.findByIdAndRemovedFalse(id)
-                .orElseThrow(() -> new EntityNotFoundException("Subcategory not found"));
-    }
-
-    @Override
-    public Subcategory findByName(String name) {
-        return this.subcategoryRepository.findByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("Subcategory not found"));
-    }
-
-    @Override
-    public Subcategory getByName(String name) {
-        return this.subcategoryRepository.findByNameAndRemovedFalse(name)
+        return this.subcategoryRepository.findByIdAndRemovedTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Subcategory not found"));
     }
 

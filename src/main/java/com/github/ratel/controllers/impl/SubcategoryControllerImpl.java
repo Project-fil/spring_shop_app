@@ -4,7 +4,6 @@ import com.github.ratel.controllers.ApiSecurityHeader;
 import com.github.ratel.controllers.interfaces.SubcategoryController;
 import com.github.ratel.entity.Category;
 import com.github.ratel.entity.Subcategory;
-import com.github.ratel.payload.request.SubcategoryRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.SubcategoryResponse;
 import com.github.ratel.services.CategoryService;
@@ -52,7 +51,7 @@ public class SubcategoryControllerImpl implements ApiSecurityHeader, Subcategory
     public ResponseEntity<List<SubcategoryResponse>> readAllForAdmin(long categoryId) {
         Category category = this.categoryService.findById(categoryId);
         return ResponseEntity.ok(this.subcategoryService.findByAllForAdmin(category).stream()
-                .map(SubcategoryTransferObj::fromSubcategory)
+                .map(SubcategoryTransferObj::fromSubcategoryForAdmin)
                 .collect(Collectors.toList())
         );
     }
@@ -61,12 +60,6 @@ public class SubcategoryControllerImpl implements ApiSecurityHeader, Subcategory
     @CrossOrigin("*")
     public ResponseEntity<SubcategoryResponse> findById(long id) {
         return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(this.subcategoryService.findById(id)));
-    }
-
-    @Override
-    @CrossOrigin("*")
-    public ResponseEntity<SubcategoryResponse> findByName(String name) {
-        return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(this.subcategoryService.findByName(name)));
     }
 
     @Override
@@ -80,30 +73,17 @@ public class SubcategoryControllerImpl implements ApiSecurityHeader, Subcategory
         if (Objects.isNull(getSubcategory)) {
             getSubcategory = this.subcategoryService.getById(id);
         }
-        return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(getSubcategory));
-    }
-
-    @Override
-    @CrossOrigin("*")
-    @Secured("ROLE_ADMIN")
-    public ResponseEntity<SubcategoryResponse> getByNameForAdmin(String name) {
-        Subcategory getByName = null;
-        try {
-            getByName = this.subcategoryService.findByName(name);
-        }catch (Exception ignore) {}
-        if (Objects.isNull(getByName)) {
-            getByName = this.subcategoryService.getByName(name);
-        }
-        return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(getByName));
+        return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategoryForAdmin(getSubcategory));
     }
 
     @Override
     @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<SubcategoryResponse> createSubcategory(SubcategoryRequest subcategoryRequest) {
-        Subcategory subcategory = SubcategoryTransferObj.toSubcategory(subcategoryRequest);
-        Category category = this.categoryService.findById(subcategoryRequest.getCategoryId());
+    public ResponseEntity<SubcategoryResponse> createSubcategory(long categoryId, String name) {
+        Category category = this.categoryService.findById(categoryId);
+        Subcategory subcategory = new Subcategory();
+        subcategory.setName(name);
         subcategory.setCategory(category);
         return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(this.subcategoryService.create(subcategory)));
     }
@@ -111,9 +91,9 @@ public class SubcategoryControllerImpl implements ApiSecurityHeader, Subcategory
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<SubcategoryResponse> updateSubcategory(SubcategoryRequest subcategoryRequest, long id) {
-        Subcategory subcategory = this.subcategoryService.findById(id);
-        subcategory.setName(subcategoryRequest.getName());
+    public ResponseEntity<SubcategoryResponse> updateSubcategory(long subCategoryId, String name) {
+        Subcategory subcategory = this.subcategoryService.findById(subCategoryId);
+        subcategory.setName(name);
         return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(this.subcategoryService.update(subcategory)));
     }
 

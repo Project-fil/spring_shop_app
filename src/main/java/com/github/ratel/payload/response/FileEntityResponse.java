@@ -1,12 +1,12 @@
 package com.github.ratel.payload.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileEntityResponse {
@@ -27,5 +27,11 @@ public class FileEntityResponse {
 
     private Date updatedAt;
 
-
+    public FileEntityResponse(Long id, String path, String fileName, String contentType, long size) {
+        this.id = id;
+        this.path = path;
+        this.fileName = fileName;
+        this.contentType = contentType;
+        this.size = size;
+    }
 }

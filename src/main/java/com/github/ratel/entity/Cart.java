@@ -1,7 +1,6 @@
 package com.github.ratel.entity;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,33 +9,37 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
 @Entity
+@Table(name = "user_cart")
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "verification_token")
-@SQLDelete(sql = "UPDATE verification_token SET is_removed = true WHERE id=?")
+@SQLDelete(sql = "UPDATE cart SET is_removed = true WHERE id=?")
 @Where(clause = "is_removed=false")
-public class VerificationToken implements Serializable {
+public class Cart implements Serializable {
 
     @Transient
-    private static final long serialVersionUID = -2634418014000059593L;
+    private static final long serialVersionUID = -2527059234543259013L;
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, columnDefinition = "BIGINT", unique = true)
     private Long id;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @ElementCollection
+    @Column(name = "quantity")
+    @MapKeyJoinColumn(name = "product_id")
+    private Map<Product, Integer> products = new HashMap<>();
 
-    @Column(name = "token", nullable = false, unique = true)
-    private String token;
+    @OneToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "is_removed")
     private boolean removed;
@@ -51,22 +54,17 @@ public class VerificationToken implements Serializable {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    public VerificationToken(User user, String token) {
-        this.user = user;
-        this.token = token;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        VerificationToken that = (VerificationToken) o;
-        return id != null && Objects.equals(id, that.id);
+        if (o == null || getClass() != o.getClass()) return false;
+        Cart cart = (Cart) o;
+        return removed == cart.removed && id.equals(cart.id) && products.equals(cart.products) && user.equals(cart.user);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id, products, user, removed);
     }
 
 }

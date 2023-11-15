@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @UtilityClass
-public class UserUtil {
+public class EntityUtil {
 
     public static <T> T updateField(T fieldData, T fieldPayload) {
         if (fieldPayload != "" && fieldPayload != null) {

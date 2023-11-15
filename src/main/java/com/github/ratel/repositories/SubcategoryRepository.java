@@ -11,12 +11,8 @@ public interface SubcategoryRepository extends JpaRepository<Subcategory, Long> 
 
     List<Subcategory> findAllByCategory(Category category);
 
-    List<Subcategory> findAllByCategoryAndRemovedFalse(Category category);
+    List<Subcategory> findAllByCategoryAndRemovedTrue(Category category);
 
-    Optional<Subcategory> findByIdAndRemovedFalse(long id);
-
-    Optional<Subcategory> findByName(String name);
-
-    Optional<Subcategory> findByNameAndRemovedFalse(String name);
+    Optional<Subcategory> findByIdAndRemovedTrue(long id);
 
 }

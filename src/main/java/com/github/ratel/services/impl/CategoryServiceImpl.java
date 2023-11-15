@@ -22,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> findAllCategoryForAdmin() {
-        return this.categoryRepository.findAllByRemovedFalse();
+        return this.categoryRepository.findAllByRemovedTrue();
     }
 
     @Override
@@ -33,13 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getByIdForAdmin(long id) {
-        return this.categoryRepository.findByIdAndRemovedFalse(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
-    }
-
-    @Override
-    public Category findCategoryByName(String name) {
-        return this.categoryRepository.findByName(name)
+        return this.categoryRepository.findByIdAndRemovedTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
     }
 

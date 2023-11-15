@@ -24,11 +24,9 @@ public class ProductTransferObj {
                 payload.getPrice(),
                 payload.getFiles().stream().map(FileTransferObj::fromFile).collect(Collectors.toSet()),
                 payload.getQuantity(),
-                payload.getSubcategory().getName(),
+                payload.getSubcategory().getId().toString(),
                 payload.getBrand(),
-                checkComment(payload.getComments()),
-                payload.getCratedAt(),
-                payload.getUpdatedAt()
+                checkComment(payload.getComments())
         );
     }
 
@@ -40,6 +38,23 @@ public class ProductTransferObj {
         product.setPrice(BigDecimal.valueOf(Double.parseDouble(payload.getPrice())));
         product.setQuantity(Integer.parseInt(payload.getQuantity()));
         return product;
+    }
+
+    public static ProductResponse fromProductForAdmin(Product payload) {
+        return new ProductResponse(
+                payload.getId(),
+                payload.getName(),
+                payload.getVendorCode(),
+                payload.getDescription(),
+                payload.getPrice(),
+                payload.getFiles().stream().map(FileTransferObj::fromFile).collect(Collectors.toSet()),
+                payload.getQuantity(),
+                payload.getSubcategory().getId().toString(),
+                payload.getBrand(),
+                checkComment(payload.getComments()),
+                payload.getCratedAt(),
+                payload.getUpdatedAt()
+        );
     }
 
     private static Set<CommentResponse> checkComment(Set<Comment> comments) {

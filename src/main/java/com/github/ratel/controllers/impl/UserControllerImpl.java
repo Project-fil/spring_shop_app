@@ -2,12 +2,15 @@ package com.github.ratel.controllers.impl;
 
 import com.github.ratel.controllers.ApiSecurityHeader;
 import com.github.ratel.controllers.interfaces.UserController;
+import com.github.ratel.entity.Cart;
 import com.github.ratel.entity.FileEntity;
 import com.github.ratel.entity.User;
 import com.github.ratel.handlers.FileHandler;
 import com.github.ratel.payload.request.UserUpdateRequest;
+import com.github.ratel.payload.dto.CartDto;
 import com.github.ratel.payload.response.UserResponse;
 import com.github.ratel.services.UserService;
+import com.github.ratel.utils.transfer_object.CartTransferObject;
 import com.github.ratel.utils.transfer_object.UserTransferObj;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +37,7 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
 
     @Override
     @CrossOrigin("*")
+    @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     public ResponseEntity<UserResponse> getCurrentUser(Principal principal) {
         User user = this.userService.getCurrentUser(principal);
         return ResponseEntity.ok(UserTransferObj.fromUser(user));
@@ -54,7 +58,7 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
     @Secured("ROLE_ADMIN")
     public ResponseEntity<List<UserResponse>> findAllUsersForAdmin() {
         return ResponseEntity.ok(this.userService.findAllUsersForAdmin().stream()
-                .map(UserTransferObj::fromUser)
+                .map(UserTransferObj::fromUserForAdmin)
                 .collect(Collectors.toList())
         );
     }
@@ -67,6 +71,8 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
     }
 
     @Override
+    @CrossOrigin("*")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<UserResponse> getUserByIdForAdmin(Long userId) {
         User getUser = null;
         try {
@@ -75,7 +81,29 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
         if (Objects.isNull(getUser)) {
             getUser = this.userService.findUserForAdmin(userId);
         }
-        return ResponseEntity.ok(UserTransferObj.fromUser(getUser));
+        return ResponseEntity.ok(UserTransferObj.fromUserForAdmin(getUser));
+    }
+
+    @Override
+    @CrossOrigin("*")
+    @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
+    public ResponseEntity<CartDto> getUserCart(Principal principal) {
+        return ResponseEntity.ok(CartTransferObject.fromCart(this.userService.getUserCart(principal)));
+    }
+
+    @Override
+    @CrossOrigin("*")
+    @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
+    public ResponseEntity<CartDto> getUserCart(long cartId) {
+        return ResponseEntity.ok(CartTransferObject.fromCart(this.userService.findCartById(cartId)));
+    }
+
+    @Override
+    @CrossOrigin
+    @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
+    public ResponseEntity<CartDto> updateUserCart(CartDto cartDto) {
+        Cart cart = CartTransferObject.toCart(this.userService.findCartById(cartDto.getId()), cartDto);
+        return ResponseEntity.ok(CartTransferObject.fromCart(this.userService.updateCart(cart)));
     }
 
     @Override

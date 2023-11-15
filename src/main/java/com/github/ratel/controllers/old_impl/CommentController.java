@@ -1,7 +1,7 @@
 //package com.github.ratel.controllers.impl;
 //
 //import com.github.ratel.controllers.ApiSecurityHeader;
-//import com.github.ratel.dto.CommentDto;
+//import com.github.ratel.payload.dto.CommentDto;
 //import com.github.ratel.entity.Comment;
 //import com.github.ratel.services.impl.CommentServiceImpl;
 //import io.swagger.v3.oas.annotations.security.SecurityRequirement;

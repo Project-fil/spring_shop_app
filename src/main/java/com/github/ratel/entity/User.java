@@ -55,6 +55,9 @@ public class User implements Serializable {
     @JoinColumn(name = "address_id")
     private Address address;
 
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private Cart cart;
+
     @ToString.Exclude
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Order> orders = new ArrayList<>();

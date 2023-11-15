@@ -1,14 +1,17 @@
 package com.github.ratel.payload.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+import javax.validation.constraints.NotBlank;
+
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserUpdateRequest {
 
+    @NotBlank
     private long id;
 
     private String firstname;

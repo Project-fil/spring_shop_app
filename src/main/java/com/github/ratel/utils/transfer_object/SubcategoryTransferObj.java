@@ -1,7 +1,6 @@
 package com.github.ratel.utils.transfer_object;
 
 import com.github.ratel.entity.Subcategory;
-import com.github.ratel.payload.request.SubcategoryRequest;
 import com.github.ratel.payload.response.SubcategoryResponse;
 import lombok.experimental.UtilityClass;
 
@@ -15,6 +14,15 @@ public class SubcategoryTransferObj {
                 payload.getId(),
                 payload.getName(),
                 payload.getCategory().getName(),
+                payload.getProducts().stream().map(ProductTransferObj::fromProduct).collect(Collectors.toList())
+        );
+    }
+
+    public static SubcategoryResponse fromSubcategoryForAdmin(Subcategory payload) {
+        return new SubcategoryResponse(
+                payload.getId(),
+                payload.getName(),
+                payload.getCategory().getName(),
                 payload.getProducts().stream().map(ProductTransferObj::fromProduct).collect(Collectors.toList()),
                 payload.isRemoved(),
                 payload.getCratedAt(),
@@ -22,11 +30,6 @@ public class SubcategoryTransferObj {
         );
     }
 
-    public static Subcategory toSubcategory(SubcategoryRequest payload) {
-        return new Subcategory(
-                payload.getName()
-        );
-    }
 
 //    public static SubcategoryResponse fromSubcategoryWithoutCategory(Subcategory payload) {
 //        return new SubcategoryResponse(

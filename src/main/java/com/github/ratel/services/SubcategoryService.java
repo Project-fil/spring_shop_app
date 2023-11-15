@@ -15,10 +15,6 @@ public interface SubcategoryService {
 
     Subcategory getById(long id);
 
-    Subcategory findByName(String name);
-
-    Subcategory getByName(String name);
-
     Subcategory create(Subcategory subcategory);
 
     Subcategory update(Subcategory subcategory);

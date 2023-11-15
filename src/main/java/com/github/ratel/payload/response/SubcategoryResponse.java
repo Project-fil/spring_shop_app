@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,17 +26,16 @@ public class SubcategoryResponse {
 
     private Date updatedAt;
 
-    public SubcategoryResponse(Long id,
-                               String name,
-                               List<ProductResponse> productResponseList,
-                               boolean removed,
-                               Date cratedAt,
-                               Date updatedAt) {
+    public SubcategoryResponse(
+            Long id,
+            String name,
+            String categoryName,
+            List<ProductResponse> productResponseList
+    ) {
         this.id = id;
         this.name = name;
+        this.categoryName = categoryName;
         this.productResponseList = productResponseList;
-        this.removed = removed;
-        this.cratedAt = cratedAt;
-        this.updatedAt = updatedAt;
     }
+
 }

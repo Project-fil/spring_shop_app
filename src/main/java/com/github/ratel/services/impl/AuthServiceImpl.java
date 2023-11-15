@@ -1,6 +1,7 @@
 package com.github.ratel.services.impl;
 
 import com.github.ratel.entity.Address;
+import com.github.ratel.entity.Cart;
 import com.github.ratel.entity.User;
 import com.github.ratel.entity.VerificationToken;
 import com.github.ratel.entity.enums.Roles;
@@ -22,6 +23,8 @@ import java.util.UUID;
 public class AuthServiceImpl implements AuthService {
 
     private final EmailText emailText;
+
+    private final CartService cartService;
 
     private final UserService userService;
 
@@ -51,6 +54,9 @@ public class AuthServiceImpl implements AuthService {
         var token = (UUID.randomUUID().toString());
         user.setAddress(address);
         this.userService.save(user);
+        Cart cart = new Cart();
+        cart.setUser(user);
+        this.cartService.create(cart);
         this.verificationTokenService.create(new VerificationToken(user, token));
         this.sendGridMailService.sendMessage(
                 user.getEmail(),

@@ -1,15 +1,13 @@
 package com.github.ratel.payload.response;
 
-import com.github.ratel.entity.Subcategory;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryResponse {
@@ -26,11 +24,9 @@ public class CategoryResponse {
 
     private Date createAt;
 
-    public CategoryResponse(Long id, String name, boolean removed, Date updateAt, Date createAt) {
+    public CategoryResponse(Long id, String name, Set<SubcategoryResponse> subcategories) {
         this.id = id;
         this.name = name;
-        this.removed = removed;
-        this.updateAt = updateAt;
-        this.createAt = createAt;
+        this.subcategories = subcategories;
     }
 }

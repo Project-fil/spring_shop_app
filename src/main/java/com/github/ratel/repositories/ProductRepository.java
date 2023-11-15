@@ -13,12 +13,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllBySubcategory(Subcategory subcategory);
 
-    List<Product> findAllByRemovedFalse();
+    List<Product> findAllByRemovedTrue();
 
-    Optional<Product> findByIdAndRemovedFalse(long id);
+    Optional<Product> findByIdAndRemovedTrue(long id);
 
     Optional<Product> findByVendorCode(String code);
 
-    Optional<Product> findByVendorCodeAndRemovedFalse(String code);
+    Optional<Product> findByVendorCodeAndRemovedTrue(String code);
 
 }

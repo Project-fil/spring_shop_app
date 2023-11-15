@@ -23,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findAllForAdmin() {
-        return this.productRepository.findAllByRemovedFalse();
+        return this.productRepository.findAllByRemovedTrue();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findByIdForAdmin(long id) {
-        return this.productRepository.findByIdAndRemovedFalse(id).orElseThrow(
+        return this.productRepository.findByIdAndRemovedTrue(id).orElseThrow(
                 () -> new EntityNotFoundException("Product not found")
         );
     }
@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findByVendorCodeForAdmin(String code) {
-        return this.productRepository.findByVendorCodeAndRemovedFalse(code).orElseThrow(
+        return this.productRepository.findByVendorCodeAndRemovedTrue(code).orElseThrow(
                 () -> new EntityNotFoundException("Product not found")
         );
     }

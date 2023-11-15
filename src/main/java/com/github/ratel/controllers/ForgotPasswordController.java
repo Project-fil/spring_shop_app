@@ -1,6 +1,6 @@
 package com.github.ratel.controllers;
 
-import com.github.ratel.dto.ForgotPassDto;
+import com.github.ratel.payload.request.ForgotPassRequest;
 import com.github.ratel.entity.ConfirmToken;
 import com.github.ratel.entity.User;
 import com.github.ratel.exceptions.EntityNotFoundException;
@@ -38,7 +38,7 @@ public class ForgotPasswordController {
 
     @PostMapping("free/forgot")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> submitForgotPassword(@Valid @RequestBody ForgotPassDto payload) {
+    public ResponseEntity<Object> submitForgotPassword(@Valid @RequestBody ForgotPassRequest payload) {
         User user = this.userService.findUserByEmail(payload.getEmail());
         CheckUtil.checkPassAndConfirmPass(payload.getNewPassword(), payload.getConfirmPassword());
         if (StringUtils.hasText(user.getEmail())) {

@@ -15,23 +15,23 @@ import java.util.List;
 @SecurityRequirement(name = "Authorization")
 public interface ProductController {
 
-    @GetMapping("free/product/find/all")
-    ResponseEntity<List<ProductResponse>> findAll(@RequestParam long subcategoryId);
+    @GetMapping("free/product/find/all/{subcategoryId}")
+    ResponseEntity<List<ProductResponse>> findAll(@PathVariable long subcategoryId);
 
     @GetMapping("product/find/all/admin")
     ResponseEntity<List<ProductResponse>> findAllForAdmin();
 
-    @GetMapping("free/product/find/id")
-    ResponseEntity<ProductResponse> findById(@RequestParam long id);
+    @GetMapping("free/product/find/id/{id}")
+    ResponseEntity<ProductResponse> findById(@PathVariable long id);
 
-    @GetMapping("product/find/admin/id")
-    ResponseEntity<ProductResponse> findByIdForAdmin(@RequestParam long id);
+    @GetMapping("product/find/admin/id/{id}")
+    ResponseEntity<ProductResponse> findByIdForAdmin(@PathVariable long id);
 
-    @GetMapping("free/product/find/code/admin/id")
-    ResponseEntity<ProductResponse> findByVendorCode(@RequestParam String code);
+    @GetMapping("free/product/find/code/admin/code/{code}")
+    ResponseEntity<ProductResponse> findByVendorCode(@PathVariable String code);
 
-    @GetMapping("product/find/code/admin/id")
-    ResponseEntity<ProductResponse> findByVendorCodeForAdmin(@RequestParam String code);
+    @GetMapping("product/find/code/admin/code/{code}")
+    ResponseEntity<ProductResponse> findByVendorCodeForAdmin(@PathVariable String code);
 
     @PostMapping(value = "product/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ProductResponse> create(
@@ -45,6 +45,6 @@ public interface ProductController {
     @PutMapping("product/image")
     ResponseEntity<ProductResponse> updateImage(@RequestParam("id") long id, @RequestPart("file") MultipartFile file);
 
-    @DeleteMapping("product/delete")
-    ResponseEntity<MessageResponse> delete(@RequestParam long id);
+    @DeleteMapping("product/delete/{id}")
+    ResponseEntity<MessageResponse> delete(@PathVariable long id);
 }

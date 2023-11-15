@@ -1,6 +1,7 @@
 package com.github.ratel.controllers.interfaces;
 
 import com.github.ratel.payload.request.UserUpdateRequest;
+import com.github.ratel.payload.dto.CartDto;
 import com.github.ratel.payload.response.UserResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.MediaType;
@@ -29,6 +30,15 @@ public interface UserController {
 
     @GetMapping("admin/{userId}")
     ResponseEntity<UserResponse> getUserByIdForAdmin(@PathVariable Long userId);
+
+    @GetMapping("user/cart")
+    ResponseEntity<CartDto> getUserCart(Principal principal);
+
+    @GetMapping("user/cart/{cartId}")
+    ResponseEntity<CartDto> getUserCart(@PathVariable long cartId);
+
+    @PutMapping(value = "user/cart/update/")
+    ResponseEntity<CartDto> updateUserCart(@RequestBody CartDto cartDto);
 
     @PutMapping(value = "user/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UserResponse> update(

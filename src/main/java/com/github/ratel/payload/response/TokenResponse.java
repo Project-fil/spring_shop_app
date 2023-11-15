@@ -1,11 +1,11 @@
 package com.github.ratel.payload.response;
 
 import com.github.ratel.entity.enums.Roles;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 public class TokenResponse {
 

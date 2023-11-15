@@ -16,6 +16,19 @@ public class FileTransferObj {
                 fileEntity.getPath(),
                 fileEntity.getFileName(),
                 fileEntity.getContentType(),
+                fileEntity.getSize()
+        );
+    }
+
+    public static FileEntityResponse fromFileForAdmin(FileEntity fileEntity) {
+        if (fileEntity == null) {
+            return null;
+        }
+        return new FileEntityResponse(
+                fileEntity.getId(),
+                fileEntity.getPath(),
+                fileEntity.getFileName(),
+                fileEntity.getContentType(),
                 fileEntity.getSize(),
                 fileEntity.isRemoved(),
                 fileEntity.getCratedAt(),
