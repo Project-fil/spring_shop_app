@@ -1,13 +1,13 @@
 package com.github.ratel.payload.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubcategoryResponse {
@@ -16,7 +16,7 @@ public class SubcategoryResponse {
 
     private String name;
 
-    private String categoryName;
+    private String categoryId;
 
     private List<ProductResponse> productResponseList;
 
@@ -25,17 +25,5 @@ public class SubcategoryResponse {
     private Date cratedAt;
 
     private Date updatedAt;
-
-    public SubcategoryResponse(
-            Long id,
-            String name,
-            String categoryName,
-            List<ProductResponse> productResponseList
-    ) {
-        this.id = id;
-        this.name = name;
-        this.categoryName = categoryName;
-        this.productResponseList = productResponseList;
-    }
 
 }

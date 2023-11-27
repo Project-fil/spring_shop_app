@@ -35,26 +35,4 @@ public class AddressResponse {
 
     private Date lastModifiedDate;
 
-    public AddressResponse(Long id,
-                           String comment,
-                           String phone,
-                           String country,
-                           String city,
-                           String street,
-                           String houseNumber,
-                           String apartmentNumber,
-                           Date createdDate,
-                           Date lastModifiedDate
-    ) {
-        this.id = id;
-        this.comment = comment;
-        this.phone = phone;
-        this.country = country;
-        this.city = city;
-        this.street = street;
-        this.houseNumber = houseNumber;
-        this.apartmentNumber = apartmentNumber;
-        this.createdDate = createdDate;
-        this.lastModifiedDate = lastModifiedDate;
-    }
 }

@@ -2,8 +2,6 @@ package com.github.ratel.payload.request;
 
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 @ToString
@@ -23,6 +21,6 @@ public class ProductRequest {
 
     private String quantity;
 
-    private long subcategoryId;
+    private Long subcategoryId;
 
 }

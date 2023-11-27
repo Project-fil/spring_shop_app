@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 
 import javax.validation.Valid;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -19,6 +20,33 @@ public class EntityUtil {
             fieldData = fieldPayload;
         }
         return fieldData;
+    }
+
+    public static <T> T convertToEntityType(Object dataVO, Object conData) {
+        Object object = null;
+        if (conData != "" && conData != null) {
+            String convertObjToString = String.valueOf(conData);
+            String dataType = dataVO.getClass().getSimpleName();
+            switch (dataType) {
+                case "String":
+                    object = convertObjToString;
+                    break;
+                case "Integer":
+                    object = Integer.parseInt(convertObjToString);
+                    break;
+                case "Long":
+                    object = Long.parseLong(convertObjToString);
+                    break;
+                case "Double":
+                    object = Double.parseDouble(convertObjToString);
+                    break;
+                case "BigDecimal":
+                    object = new BigDecimal(convertObjToString);
+                    break;
+            }
+        }
+        @SuppressWarnings(value = "unchecked") final T result = (T) object;
+        return result;
     }
 
     public <T> T updateFields(Object obj, @Valid Map<String, Object> data) {

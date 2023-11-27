@@ -125,4 +125,16 @@ public class CatcherException extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(value = AppException.class)
+    public ResponseEntity<Object> handleFileType(AppException ex, HttpServletRequest request) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(
+                        new Date(),
+                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                        request.getRequestURI()
+                )
+        );
+    }
+
 }

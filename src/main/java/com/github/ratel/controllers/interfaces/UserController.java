@@ -1,11 +1,12 @@
 package com.github.ratel.controllers.interfaces;
 
 import com.github.ratel.payload.request.UserUpdateRequest;
-import com.github.ratel.payload.dto.CartDto;
+import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.UserResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,15 +32,6 @@ public interface UserController {
     @GetMapping("admin/{userId}")
     ResponseEntity<UserResponse> getUserByIdForAdmin(@PathVariable Long userId);
 
-    @GetMapping("user/cart")
-    ResponseEntity<CartDto> getUserCart(Principal principal);
-
-    @GetMapping("user/cart/{cartId}")
-    ResponseEntity<CartDto> getUserCart(@PathVariable long cartId);
-
-    @PutMapping(value = "user/cart/update/")
-    ResponseEntity<CartDto> updateUserCart(@RequestBody CartDto cartDto);
-
     @PutMapping(value = "user/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UserResponse> update(
             @Valid @RequestPart("body") UserUpdateRequest updateRequest,
@@ -47,6 +39,6 @@ public interface UserController {
             );
 
     @DeleteMapping("/{userId}")
-    void deleteUser(@PathVariable Long userId);
+    ResponseEntity<MessageResponse> deleteUser(@PathVariable Long userId);
 
 }

@@ -55,8 +55,8 @@ public class Address implements Serializable {
     private String apartmentNumber;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "address")
-    private List<User> userAddress = new ArrayList<>();
+    @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
+    private List<User> users = new ArrayList<>();
 
     @Column(name = "is_removed")
     private boolean removed;
@@ -72,9 +72,9 @@ public class Address implements Serializable {
     private Date createdDate;
 
     public void addUser(User user) {
-        if (Objects.isNull(this.userAddress))
-            this.userAddress = new ArrayList<>();
-        this.userAddress.add(user);
+        if (Objects.isNull(this.users))
+            this.users = new ArrayList<>();
+        this.users.add(user);
     }
 
     @Override

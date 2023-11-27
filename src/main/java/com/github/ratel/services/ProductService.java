@@ -4,20 +4,19 @@ import com.github.ratel.entity.Product;
 import com.github.ratel.entity.Subcategory;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProductService {
 
-    List<Product> findAll(Subcategory subcategory);
+    List<Product> findAllInSubcategory(Subcategory subcategory);
+
+    List<Product> findListForIds(List<Long> products);
 
     List<Product> findAllForAdmin();
 
     Product findById(long id);
 
     Product findByIdForAdmin(long id);
-
-    Product findByVendorCode(String code);
-
-    Product findByVendorCodeForAdmin(String code);
 
     Product create(Product product);
 

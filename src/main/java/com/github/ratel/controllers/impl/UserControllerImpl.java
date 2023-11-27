@@ -2,15 +2,14 @@ package com.github.ratel.controllers.impl;
 
 import com.github.ratel.controllers.ApiSecurityHeader;
 import com.github.ratel.controllers.interfaces.UserController;
-import com.github.ratel.entity.Cart;
 import com.github.ratel.entity.FileEntity;
 import com.github.ratel.entity.User;
 import com.github.ratel.handlers.FileHandler;
 import com.github.ratel.payload.request.UserUpdateRequest;
-import com.github.ratel.payload.dto.CartDto;
+import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.UserResponse;
+import com.github.ratel.services.FileService;
 import com.github.ratel.services.UserService;
-import com.github.ratel.utils.transfer_object.CartTransferObject;
 import com.github.ratel.utils.transfer_object.UserTransferObj;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +32,8 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
 
     private final UserService userService;
 
+    private final FileService fileService;
+
     private final FileHandler fileHandler;
 
     @Override
@@ -48,7 +49,7 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<List<UserResponse>> findAllActiveUsers() {
         return ResponseEntity.ok(this.userService.findAllUsers().stream()
-                .map(UserTransferObj::fromUser)
+                .map(UserTransferObj::fromLazyUser)
                 .collect(Collectors.toList())
         );
     }
@@ -85,28 +86,6 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
     }
 
     @Override
-    @CrossOrigin("*")
-    @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<CartDto> getUserCart(Principal principal) {
-        return ResponseEntity.ok(CartTransferObject.fromCart(this.userService.getUserCart(principal)));
-    }
-
-    @Override
-    @CrossOrigin("*")
-    @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<CartDto> getUserCart(long cartId) {
-        return ResponseEntity.ok(CartTransferObject.fromCart(this.userService.findCartById(cartId)));
-    }
-
-    @Override
-    @CrossOrigin
-    @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<CartDto> updateUserCart(CartDto cartDto) {
-        Cart cart = CartTransferObject.toCart(this.userService.findCartById(cartDto.getId()), cartDto);
-        return ResponseEntity.ok(CartTransferObject.fromCart(this.userService.updateCart(cart)));
-    }
-
-    @Override
     @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
@@ -115,16 +94,18 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
         UserTransferObj.updateUser(user, updateRequest);
         FileEntity fileEntity = null;
         if (Objects.nonNull(image)) {
-            fileEntity = this.fileHandler.writeFile(image);
+            fileEntity = this.fileService.create(this.fileHandler.writeFile(image));
+            if (Objects.nonNull(user.getFileEntity())) this.fileService.deleteById(user.getFileEntity().getId());
         }
         user.setFileEntity(fileEntity);
         return ResponseEntity.ok(UserTransferObj.fromUser(this.userService.updateUser(user)));
     }
 
     @Override
+    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
-    public void deleteUser(Long userId) {
-        this.userService.deleteUserById(userId);
+    public ResponseEntity<MessageResponse> deleteUser(Long userId) {
+        return ResponseEntity.ok(new MessageResponse(this.userService.deleteUserById(userId)));
     }
 }

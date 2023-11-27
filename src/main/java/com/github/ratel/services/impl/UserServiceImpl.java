@@ -1,13 +1,11 @@
 package com.github.ratel.services.impl;
 
-import com.github.ratel.entity.Cart;
 import com.github.ratel.entity.User;
 import com.github.ratel.entity.enums.Roles;
 import com.github.ratel.exceptions.ConfirmPasswordException;
 import com.github.ratel.exceptions.EntityNotFoundException;
 import com.github.ratel.exceptions.statuscode.StatusCode;
 import com.github.ratel.repositories.UserRepository;
-import com.github.ratel.services.CartService;
 import com.github.ratel.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,8 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final CartService cartService;
-
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
@@ -29,8 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCurrentUser(Principal principal) {
-        String userEmail = principal.getName();
-        return this.findUserByEmail(userEmail);
+        return this.findUserByEmail(principal.getName());
     }
 
     @Override
@@ -65,22 +60,6 @@ public class UserServiceImpl implements UserService {
     public boolean findUserByRole(Roles role) {
         User user = this.userRepository.findUserByRoles(role).orElse(null);
         return user != null;
-    }
-
-    @Override
-    public Cart getUserCart(Principal principal) {
-        User user = this.getCurrentUser(principal);
-        return this.cartService.findById(user.getCart().getId());
-    }
-
-    @Override
-    public Cart findCartById(long id) {
-        return this.cartService.findById(id);
-    }
-
-    @Override
-    public Cart updateCart(Cart cart) {
-        return this.cartService.update(cart);
     }
 
     @Override

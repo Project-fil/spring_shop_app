@@ -20,9 +20,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart create(Cart cart) {
-        return this.cartRepository.save(cart);
-    }
+    public Cart create(Cart cart) { return this.cartRepository.save(cart); }
 
     @Override
     public Cart update(Cart cart) {

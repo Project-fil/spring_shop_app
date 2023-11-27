@@ -38,27 +38,4 @@ public class ProductResponse {
 
     private Date updatedAt;
 
-    public ProductResponse(
-            Long id,
-            String name,
-            String vendorCode,
-            String description,
-            BigDecimal price,
-            Set<FileEntityResponse> files,
-            int quantity,
-            String subcategoryId,
-            String brand,
-            Set<CommentResponse> comments
-    ) {
-        this.id = id;
-        this.name = name;
-        this.vendorCode = vendorCode;
-        this.description = description;
-        this.price = price;
-        this.files = files;
-        this.quantity = quantity;
-        this.subcategoryId = subcategoryId;
-        this.brand = brand;
-        this.comments = comments;
-    }
 }

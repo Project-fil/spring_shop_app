@@ -17,37 +17,35 @@ public class AddressTransferObj {
         if (Objects.isNull(payload)) {
             return null;
         }
-        return new AddressResponse(
-                payload.getId(),
-                payload.getComment(),
-                payload.getPhone(),
-                payload.getCountry(),
-                payload.getCity(),
-                payload.getStreet(),
-                payload.getHouseNumber(),
-                payload.getApartmentNumber(),
-                ifExist(payload.getUserAddress()),
-                payload.getCreatedDate(),
-                payload.getLastModifiedDate()
-        );
+        AddressResponse response = new AddressResponse();
+        response.setId(payload.getId());
+        response.setComment(payload.getComment());
+        response.setPhone(payload.getPhone());
+        response.setCountry(payload.getCountry());
+        response.setCity(payload.getCity());
+        response.setStreet(payload.getStreet());
+        response.setHouseNumber(payload.getHouseNumber());
+        response.setApartmentNumber(payload.getApartmentNumber());
+        response.setUserAddress(ifExist(payload.getUsers()));
+        response.setCreatedDate(payload.getCreatedDate());
+        response.setLastModifiedDate(payload.getLastModifiedDate());
+        return response;
     }
 
-    public static AddressResponse fromAddressWithoutUser(Address payload) {
+    public static AddressResponse fromLazyAddress(Address payload) {
         if (payload == null) {
             return null;
         }
-        return new AddressResponse(
-                payload.getId(),
-                payload.getComment(),
-                payload.getPhone(),
-                payload.getCountry(),
-                payload.getCity(),
-                payload.getStreet(),
-                payload.getHouseNumber(),
-                payload.getApartmentNumber(),
-                payload.getCreatedDate(),
-                payload.getLastModifiedDate()
-        );
+        AddressResponse response = new AddressResponse();
+        response.setId(payload.getId());
+        response.setComment(payload.getComment());
+        response.setPhone(payload.getPhone());
+        response.setCountry(payload.getCountry());
+        response.setCity(payload.getCity());
+        response.setStreet(payload.getStreet());
+        response.setHouseNumber(payload.getHouseNumber());
+        response.setApartmentNumber(payload.getApartmentNumber());
+        return response;
     }
 
     private static List<UserResponse> ifExist(List<User> users) {

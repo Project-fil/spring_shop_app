@@ -34,7 +34,7 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
     public ResponseEntity<List<CategoryResponse>> readAllCategory() {
         return ResponseEntity.ok(this.categoryService.findAllCategory().stream()
                 .sorted(Comparator.comparing(Category::getId))
-                .map(CategoryTransferObj::fromCategory)
+                .map(CategoryTransferObj::fromLazyCategory)
                 .collect(Collectors.toList()));
     }
 
@@ -43,7 +43,7 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
     @Secured("ROLE_ADMIN")
     public ResponseEntity<List<CategoryResponse>> readAllCategoryForAdmin() {
         return ResponseEntity.ok(this.categoryService.findAllCategoryForAdmin().stream()
-                .map(CategoryTransferObj::fromCategory)
+                .map(CategoryTransferObj::fromCategoryForAdmin)
                 .collect(Collectors.toList())
         );
     }
@@ -65,13 +65,13 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
         if (Objects.isNull(getCategory)) {
             getCategory = this.categoryService.getByIdForAdmin(id);
         }
-        return ResponseEntity.ok(CategoryTransferObj.fromCategory(getCategory));
+        return ResponseEntity.ok(CategoryTransferObj.fromCategoryForAdmin(getCategory));
     }
 
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<CategoryResponse> createCategory(String name) {  // TODO: 20.09.2023 testing for change class to string
+    public ResponseEntity<CategoryResponse> createCategory(String name) {
         return ResponseEntity.ok(CategoryTransferObj.fromCategory(
                 this.categoryService.createCategory(new Category(name)))
         );
@@ -80,7 +80,7 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<CategoryResponse> updateCategory(long id, String name) {  // TODO: 20.09.2023 testing for change class to string
+    public ResponseEntity<CategoryResponse> updateCategory(long id, String name) {
         Category category = this.categoryService.findById(id);
         category.setName(name);
         return ResponseEntity.ok(CategoryTransferObj.fromCategory(this.categoryService.updateCategory(category)));

@@ -9,6 +9,7 @@ import com.github.ratel.handlers.FileHandler;
 import com.github.ratel.payload.request.ProductRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.ProductResponse;
+import com.github.ratel.services.FileService;
 import com.github.ratel.services.ProductService;
 import com.github.ratel.services.SubcategoryService;
 import com.github.ratel.utils.transfer_object.ProductTransferObj;
@@ -35,6 +36,8 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
 
     private final FileHandler fileHandler;
 
+    private final FileService fileService;
+
     private final ProductService productService;
 
     private final SubcategoryService subcategoryService;
@@ -44,8 +47,8 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     public ResponseEntity<List<ProductResponse>> findAll(long subcategoryId) {
         Subcategory subcategory = this.subcategoryService.findById(subcategoryId);
         return ResponseEntity.ok(
-                this.productService.findAll(subcategory).stream()
-                        .map(ProductTransferObj::fromProduct)
+                this.productService.findAllInSubcategory(subcategory).stream()
+                        .map(ProductTransferObj::fromLazyProduct)
                         .collect(Collectors.toList())
         );
     }
@@ -82,25 +85,6 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     }
 
     @Override
-    public ResponseEntity<ProductResponse> findByVendorCode(String code) {
-        return ResponseEntity.ok(ProductTransferObj.fromProduct(this.productService.findByVendorCode(code)));
-    }
-
-    @Override
-    @CrossOrigin("*")
-    @Secured("ROLE_ADMIN")
-    public ResponseEntity<ProductResponse> findByVendorCodeForAdmin(String code) {
-        Product getProduct = null;
-        try {
-            getProduct = this.productService.findByVendorCode(code);
-        }catch (Exception ignore) {}
-        if (Objects.isNull(getProduct)) {
-            getProduct = this.productService.findByVendorCodeForAdmin(code);
-        }
-        return ResponseEntity.ok(ProductTransferObj.fromProductForAdmin(getProduct));
-    }
-
-    @Override
     @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
@@ -109,33 +93,58 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
         Product product = ProductTransferObj.toProduct(new Product(), productRequest);
         Set<FileEntity> newFiles = new HashSet<>();
         if (Objects.nonNull(files)) {
-            newFiles = files.stream().map(this.fileHandler::writeFile).collect(Collectors.toSet());
+            newFiles = files.stream()
+                    .map(this.fileHandler::writeFile)
+                    .map(this.fileService::create)
+                    .collect(Collectors.toSet());
         }
         product.setFiles(newFiles);
         product.setSubcategory(subcategory);
-        product = this.productService.create(product);
-        return ResponseEntity.ok(ProductTransferObj.fromProduct(product));
+        return ResponseEntity.ok(ProductTransferObj.fromProduct(this.productService.create(product)));
     }
 
     @Override
+    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<ProductResponse> update(ProductRequest productRequest) {
-
-        return ResponseEntity.ok(ProductTransferObj.fromProduct(null));
+    public ResponseEntity<ProductResponse> update(long id, ProductRequest productRequest) {
+        Product product = this.productService.findById(id);
+        product = ProductTransferObj.updateProduct(product, productRequest);
+        return ResponseEntity.ok(ProductTransferObj.fromProduct(this.productService.update(product)));
     }
 
     @Override
+    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<ProductResponse> updateImage(long id, MultipartFile file) {
-        return null;
+    public ResponseEntity<ProductResponse> addToImageList(Long id, MultipartFile file) {
+        Product product = this.productService.findById(id);
+        if (Objects.nonNull(file)) {
+            product.addFile(this.fileService.create(this.fileHandler.writeFile(file)));
+        }
+        this.productService.update(product);
+        return ResponseEntity.ok(ProductTransferObj.fromLazyProduct(product));
     }
 
     @Override
+    @Transactional
+    @CrossOrigin("*")
+    @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
+    public ResponseEntity<MessageResponse> deleteFromImageList(long productId, long imageId) {
+        Set<FileEntity> files = this.productService.findById(productId).getFiles();
+        files.forEach(fileEntity -> {
+            if (fileEntity.getId() == imageId) files.remove(fileEntity);
+        });
+        this.fileService.deleteById(imageId);
+        return ResponseEntity.ok(new MessageResponse("Delete image with id " + imageId + " successful"));
+    }
+
+    @Override
+    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<MessageResponse> delete(long id) {
-        return null;
+        this.productService.deleteById(id);
+        return ResponseEntity.ok(new MessageResponse("Delete image with id " + id + " successful"));
     }
 }

@@ -5,6 +5,7 @@ import com.github.ratel.entity.Product;
 import com.github.ratel.payload.request.ProductRequest;
 import com.github.ratel.payload.response.CommentResponse;
 import com.github.ratel.payload.response.ProductResponse;
+import com.github.ratel.utils.EntityUtil;
 import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
@@ -15,19 +16,61 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class ProductTransferObj {
 
-    public static ProductResponse fromProduct(Product payload) {
-        return new ProductResponse(
-                payload.getId(),
-                payload.getName(),
-                payload.getVendorCode(),
-                payload.getDescription(),
-                payload.getPrice(),
-                payload.getFiles().stream().map(FileTransferObj::fromFile).collect(Collectors.toSet()),
-                payload.getQuantity(),
-                payload.getSubcategory().getId().toString(),
-                payload.getBrand(),
-                checkComment(payload.getComments())
+    public static ProductResponse fromLazyProduct(Product payload) {
+        ProductResponse response = new ProductResponse();
+        response.setId(payload.getId());
+        response.setName(payload.getName());
+        response.setVendorCode(payload.getVendorCode());
+        response.setDescription(payload.getDescription());
+        response.setPrice(payload.getPrice());
+        response.setFiles(
+                payload.getFiles().stream()
+                        .map(FileTransferObj::fromFile)
+                        .collect(Collectors.toSet())
         );
+        response.setQuantity(payload.getQuantity());
+        response.setBrand(payload.getBrand());
+        return response;
+    }
+
+    public static ProductResponse fromProduct(Product payload) {
+        ProductResponse response = new ProductResponse();
+        response.setId(payload.getId());
+        response.setName(payload.getName());
+        response.setVendorCode(payload.getVendorCode());
+        response.setDescription(payload.getDescription());
+        response.setPrice(payload.getPrice());
+        response.setFiles(
+                payload.getFiles().stream()
+                        .map(FileTransferObj::fromFile)
+                        .collect(Collectors.toSet())
+        );
+        response.setQuantity(payload.getQuantity());
+        response.setSubcategoryId(payload.getSubcategory().getId().toString());
+        response.setBrand(payload.getBrand());
+        response.setComments(checkComment(payload.getComments()));
+        return response;
+    }
+
+    public static ProductResponse fromProductForAdmin(Product payload) {
+        ProductResponse response = new ProductResponse();
+        response.setId(payload.getId());
+        response.setName(payload.getName());
+        response.setVendorCode(payload.getVendorCode());
+        response.setDescription(payload.getDescription());
+        response.setPrice(payload.getPrice());
+        response.setFiles(
+                payload.getFiles().stream()
+                        .map(FileTransferObj::fromFile)
+                        .collect(Collectors.toSet())
+        );
+        response.setQuantity(payload.getQuantity());
+        response.setSubcategoryId(payload.getSubcategory().getId().toString());
+        response.setBrand(payload.getBrand());
+        response.setComments(checkComment(payload.getComments()));
+        response.setCratedAt(payload.getCratedAt());
+        response.setUpdatedAt(payload.getUpdatedAt());
+        return response;
     }
 
     public static Product toProduct(Product product, ProductRequest payload) {
@@ -40,23 +83,6 @@ public class ProductTransferObj {
         return product;
     }
 
-    public static ProductResponse fromProductForAdmin(Product payload) {
-        return new ProductResponse(
-                payload.getId(),
-                payload.getName(),
-                payload.getVendorCode(),
-                payload.getDescription(),
-                payload.getPrice(),
-                payload.getFiles().stream().map(FileTransferObj::fromFile).collect(Collectors.toSet()),
-                payload.getQuantity(),
-                payload.getSubcategory().getId().toString(),
-                payload.getBrand(),
-                checkComment(payload.getComments()),
-                payload.getCratedAt(),
-                payload.getUpdatedAt()
-        );
-    }
-
     private static Set<CommentResponse> checkComment(Set<Comment> comments) {
         if(Objects.isNull(comments)) {
             return Set.of();
@@ -64,4 +90,19 @@ public class ProductTransferObj {
         return comments.stream().map(CommentsTransferObj::fromComment).collect(Collectors.toSet());
     }
 
+    public static Product updateProduct(Product product, ProductRequest payload) {
+        product.setName(EntityUtil.updateField(product.getName(), payload.getName()));
+        product.setVendorCode(EntityUtil.updateField(product.getVendorCode(), payload.getVendorCode()));
+        product.setDescription(EntityUtil.updateField(product.getDescription(), payload.getDescription()));
+        product.setPrice(EntityUtil.updateField(
+                product.getPrice(),
+                EntityUtil.convertToEntityType(product.getPrice(), payload.getPrice()))
+        );
+        product.setBrand(EntityUtil.updateField(product.getBrand(), payload.getBrand()));
+        product.setQuantity(EntityUtil.updateField(
+                product.getQuantity(),
+                EntityUtil.convertToEntityType(product.getQuantity(), payload.getQuantity())
+        ));
+        return product;
+    }
 }

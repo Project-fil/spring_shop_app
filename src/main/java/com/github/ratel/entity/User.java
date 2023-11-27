@@ -47,23 +47,24 @@ public class User implements Serializable {
     @Column(name = "password", nullable = false, columnDefinition = "TEXT")
     private String password;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "file_id")
     private FileEntity fileEntity;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "user", cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Cart cart;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

@@ -16,7 +16,6 @@ import java.util.*;
 @Setter
 @ToString
 @Entity
-@Builder
 @Table(name = "products")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,10 +43,8 @@ public class Product implements Serializable {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    // TODO: 17.02.2022 delete cascade PERSIST after create FileService
-
     @ToString.Exclude
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "product_files",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -56,7 +53,7 @@ public class Product implements Serializable {
     private Set<FileEntity> files = new HashSet<>();
 
     @Column(name = "quantity", nullable = false)
-    private int quantity;
+    private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subcategory_id", referencedColumnName = "id")
@@ -65,7 +62,7 @@ public class Product implements Serializable {
     @Column(name = "brand")
     private String brand;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
     @Column(name = "is_removed")

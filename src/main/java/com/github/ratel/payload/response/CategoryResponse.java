@@ -24,9 +24,4 @@ public class CategoryResponse {
 
     private Date createAt;
 
-    public CategoryResponse(Long id, String name, Set<SubcategoryResponse> subcategories) {
-        this.id = id;
-        this.name = name;
-        this.subcategories = subcategories;
-    }
 }

@@ -11,29 +11,29 @@ public class FileTransferObj {
         if (fileEntity == null) {
             return null;
         }
-        return new FileEntityResponse(
-                fileEntity.getId(),
-                fileEntity.getPath(),
-                fileEntity.getFileName(),
-                fileEntity.getContentType(),
-                fileEntity.getSize()
-        );
+        FileEntityResponse response = new FileEntityResponse();
+        response.setId(fileEntity.getId());
+        response.setPath(fileEntity.getPath());
+        response.setFileName(fileEntity.getFileName());
+        response.setContentType(fileEntity.getContentType());
+        response.setSize(fileEntity.getSize());
+        return response;
     }
 
     public static FileEntityResponse fromFileForAdmin(FileEntity fileEntity) {
         if (fileEntity == null) {
             return null;
         }
-        return new FileEntityResponse(
-                fileEntity.getId(),
-                fileEntity.getPath(),
-                fileEntity.getFileName(),
-                fileEntity.getContentType(),
-                fileEntity.getSize(),
-                fileEntity.isRemoved(),
-                fileEntity.getCratedAt(),
-                fileEntity.getUpdatedAt()
-        );
+        FileEntityResponse response = new FileEntityResponse();
+        response.setId(fileEntity.getId());
+        response.setPath(fileEntity.getPath());
+        response.setFileName(fileEntity.getFileName());
+        response.setContentType(fileEntity.getContentType());
+        response.setSize(fileEntity.getSize());
+        response.setRemoved(fileEntity.isRemoved());
+        response.setCratedAt(fileEntity.getCratedAt());
+        response.setUpdatedAt(fileEntity.getUpdatedAt());
+        return response;
     }
 
 }

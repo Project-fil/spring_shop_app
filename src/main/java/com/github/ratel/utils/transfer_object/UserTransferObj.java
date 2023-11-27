@@ -9,44 +9,59 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class UserTransferObj {
 
-    public static UserResponse fromUser(User data) {
-        return new UserResponse(
-                data.getId(),
-                data.getFirstname(),
-                data.getLastname(),
-                data.getEmail(),
-                FileTransferObj.fromFile(data.getFileEntity()),
-                AddressTransferObj.fromAddressWithoutUser(data.getAddress()),
-                data.getRoles(),
-                data.getVerification()
-        );
+    public static UserResponse fromLazyUser(User data) {
+        UserResponse response = new UserResponse();
+        response.setId(data.getId());
+        response.setFirstname(data.getFirstname());
+        response.setLastname(data.getLastname());
+        response.setEmail(data.getEmail());
+        response.setImage(FileTransferObj.fromFile(data.getFileEntity()));
+        response.setRole(data.getRoles());
+        response.setVerification(data.getVerification());
+        return response;
     }
 
-    public static UserResponse fromUserWithoutAddress(User data) {
-        return new UserResponse(
-                data.getId(),
-                data.getFirstname(),
-                data.getLastname(),
-                data.getEmail(),
-                data.getRoles(),
-                data.getVerification()
-        );
+    public static UserResponse fromUser(User data) {
+        UserResponse response = new UserResponse();
+        response.setId(data.getId());
+        response.setFirstname(data.getFirstname());
+        response.setLastname(data.getLastname());
+        response.setEmail(data.getEmail());
+        response.setImage(FileTransferObj.fromFile(data.getFileEntity()));
+        response.setAddress(AddressTransferObj.fromLazyAddress(data.getAddress()));
+        response.setCart(CartTransferObject.fromCart(data.getCart()));
+        response.setRole(data.getRoles());
+        response.setVerification(data.getVerification());
+        return response;
     }
 
     public static UserResponse fromUserForAdmin(User data) {
-        return new UserResponse(
-                data.getId(),
-                data.getFirstname(),
-                data.getLastname(),
-                data.getEmail(),
-                FileTransferObj.fromFile(data.getFileEntity()),
-                AddressTransferObj.fromAddressWithoutUser(data.getAddress()),
-                data.getRoles(),
-                data.getVerification(),
-                data.isRemoved(),
-                data.getCratedAt(),
-                data.getUpdatedAt()
-        );
+        UserResponse response = new UserResponse();
+        response.setId(data.getId());
+        response.setFirstname(data.getFirstname());
+        response.setLastname(data.getLastname());
+        response.setEmail(data.getEmail());
+        response.setImage(FileTransferObj.fromFileForAdmin(data.getFileEntity()));
+        response.setAddress(AddressTransferObj.fromAddress(data.getAddress()));
+        response.setCart(CartTransferObject.fromCart(data.getCart()));
+        response.setRole(data.getRoles());
+        response.setVerification(data.getVerification());
+        response.setRemoved(data.isRemoved());
+        response.setCreateAt(data.getCratedAt());
+        response.setUpdateAt(data.getUpdatedAt());
+        return response;
+    }
+
+    public static UserResponse fromUserWithoutAddress(User data) {
+        UserResponse response = new UserResponse();
+        response.setId(data.getId());
+        response.setFirstname(data.getFirstname());
+        response.setLastname(data.getLastname());
+        response.setEmail(data.getEmail());
+        response.setCart(CartTransferObject.fromCart(data.getCart()));
+        response.setRole(data.getRoles());
+        response.setVerification(data.getVerification());
+        return response;
     }
 
     public static void updateUser(User user, UserUpdateRequest payload) {

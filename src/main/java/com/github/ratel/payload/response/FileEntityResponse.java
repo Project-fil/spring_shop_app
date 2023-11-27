@@ -27,11 +27,4 @@ public class FileEntityResponse {
 
     private Date updatedAt;
 
-    public FileEntityResponse(Long id, String path, String fileName, String contentType, long size) {
-        this.id = id;
-        this.path = path;
-        this.fileName = fileName;
-        this.contentType = contentType;
-        this.size = size;
-    }
 }

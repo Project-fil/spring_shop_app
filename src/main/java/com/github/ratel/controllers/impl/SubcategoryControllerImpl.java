@@ -40,7 +40,7 @@ public class SubcategoryControllerImpl implements ApiSecurityHeader, Subcategory
         Category category = this.categoryService.findById(categoryId);
         return ResponseEntity.ok(this.subcategoryService.findByAll(category).stream()
                 .sorted(Comparator.comparing(Subcategory::getId))
-                .map(SubcategoryTransferObj::fromSubcategory)
+                .map(SubcategoryTransferObj::fromLazySubcategory)
                 .collect(Collectors.toList())
         );
     }

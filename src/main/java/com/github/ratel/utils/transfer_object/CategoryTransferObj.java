@@ -9,27 +9,38 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class CategoryTransferObj {
 
+    public static CategoryResponse fromLazyCategory(Category payload) {
+        CategoryResponse response = new CategoryResponse();
+        response.setId(payload.getId());
+        response.setName(payload.getName());
+        return response;
+    }
+
     public static CategoryResponse fromCategory(Category payload) {
-        return new CategoryResponse(
-                payload.getId(),
-                payload.getName(),
+        CategoryResponse response = new CategoryResponse();
+        response.setId(payload.getId());
+        response.setName(payload.getName());
+        response.setSubcategories(
                 payload.getSubcategories().stream()
                         .map(SubcategoryTransferObj::fromSubcategory)
                         .collect(Collectors.toSet())
         );
+        return response;
     }
 
     public static CategoryResponse fromCategoryForAdmin(Category payload) {
-        return new CategoryResponse(
-                payload.getId(),
-                payload.getName(),
+        CategoryResponse response = new CategoryResponse();
+        response.setId(payload.getId());
+        response.setName(payload.getName());
+        response.setSubcategories(
                 payload.getSubcategories().stream()
-                        .map(SubcategoryTransferObj::fromSubcategoryForAdmin)
-                        .collect(Collectors.toSet()),
-                payload.isRemoved(),
-                payload.getCratedAt(),
-                payload.getCratedAt()
+                        .map(SubcategoryTransferObj::fromSubcategory)
+                        .collect(Collectors.toSet())
         );
+        response.setRemoved(payload.isRemoved());
+        response.setUpdateAt(payload.getUpdatedAt());
+        response.setCreateAt(payload.getCratedAt());
+        return response;
     }
 
 }

@@ -27,23 +27,23 @@ public interface ProductController {
     @GetMapping("product/find/admin/id/{id}")
     ResponseEntity<ProductResponse> findByIdForAdmin(@PathVariable long id);
 
-    @GetMapping("free/product/find/code/admin/code/{code}")
-    ResponseEntity<ProductResponse> findByVendorCode(@PathVariable String code);
-
-    @GetMapping("product/find/code/admin/code/{code}")
-    ResponseEntity<ProductResponse> findByVendorCodeForAdmin(@PathVariable String code);
-
     @PostMapping(value = "product/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ProductResponse> create(
             @RequestPart(value = "body") ProductRequest productRequest,
             @RequestPart(value = "file", required = false) List<MultipartFile> files
             ) throws IOException;
 
-    @PutMapping("product/update")
-    ResponseEntity<ProductResponse> update(@RequestBody ProductRequest productRequest);
+    @PutMapping("product/update/{id}")
+    ResponseEntity<ProductResponse> update(@PathVariable long id, @RequestBody ProductRequest productRequest);
 
-    @PutMapping("product/image")
-    ResponseEntity<ProductResponse> updateImage(@RequestParam("id") long id, @RequestPart("file") MultipartFile file);
+    @PutMapping(value = "product/image/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<ProductResponse> addToImageList(
+            @RequestParam("id") Long id,
+            @RequestPart("file") MultipartFile file
+    );
+
+    @DeleteMapping("product/image/delete/{productId}/{imageId}")
+    ResponseEntity<MessageResponse> deleteFromImageList(@PathVariable long productId, @PathVariable long imageId);
 
     @DeleteMapping("product/delete/{id}")
     ResponseEntity<MessageResponse> delete(@PathVariable long id);

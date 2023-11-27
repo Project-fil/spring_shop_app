@@ -1,6 +1,5 @@
 package com.github.ratel.services;
 
-import com.github.ratel.entity.Cart;
 import com.github.ratel.entity.User;
 import com.github.ratel.entity.enums.Roles;
 
@@ -32,11 +31,5 @@ public interface UserService {
     User checkUserByEmail(String email);
 
     boolean findUserByRole(Roles role);
-
-    Cart getUserCart(Principal principal);
-
-    Cart findCartById(long id);
-
-    Cart updateCart(Cart cart);
 
 }

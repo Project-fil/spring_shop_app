@@ -44,8 +44,7 @@ public class Subcategory implements Serializable {
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "subcategory",
-            cascade = CascadeType.ALL
-//            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+            cascade = CascadeType.MERGE
             )
     private List<Product> products = new ArrayList<>();
 

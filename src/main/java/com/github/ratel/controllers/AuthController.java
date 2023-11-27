@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @Slf4j
@@ -34,6 +35,7 @@ public class AuthController {
     @Autowired
     private JwtTokenProvider tokenProvider;
 
+    @CrossOrigin("*")
     @PostMapping("free/create/admin")
     public ResponseEntity<Object> registrationAdmin(@RequestBody @Valid CreateUserRequest payload) {
         this.authService.checkAdminIsExist();
@@ -49,12 +51,14 @@ public class AuthController {
         return ResponseEntity.ok(UserTransferObj.fromUser(user));
     }
 
+    @CrossOrigin("*")
     @PostMapping("free/registration")
     public ResponseEntity<Object> createUser(@RequestBody @Valid CreateUserRequest payload) {
         User user = this.authService.createUser(Roles.ROLE_USER, payload);
         return ResponseEntity.ok(UserTransferObj.fromUser(user));
     }
 
+    @CrossOrigin("*")
     @GetMapping("free/verification")
     public ResponseEntity<Object> passingVerification(@RequestParam("token") String token) {
         User user = this.authService.verificationUser(token);
@@ -68,6 +72,7 @@ public class AuthController {
         );
     }
 
+    @CrossOrigin("*")
     @PostMapping("free/authorization")
     public ResponseEntity<Object> auth(@RequestBody @Valid UserAuthRequest userAuthRequest) {
         User user = this.authService.userAuth(userAuthRequest.getEmail(), userAuthRequest.getPassword());

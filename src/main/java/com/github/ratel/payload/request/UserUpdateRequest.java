@@ -3,6 +3,7 @@ package com.github.ratel.payload.request;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -11,8 +12,8 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class UserUpdateRequest {
 
-    @NotBlank
-    private long id;
+    @NotNull
+    private Long id;
 
     private String firstname;
 
