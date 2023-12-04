@@ -38,8 +38,8 @@ public class CategoryTransferObj {
                         .collect(Collectors.toSet())
         );
         response.setRemoved(payload.isRemoved());
-        response.setUpdateAt(payload.getUpdatedAt());
-        response.setCreateAt(payload.getCratedAt());
+        response.setUpdateAt(payload.getUpdatedAt().toString());
+        response.setCreateAt(payload.getCratedAt().toString());
         return response;
     }
 

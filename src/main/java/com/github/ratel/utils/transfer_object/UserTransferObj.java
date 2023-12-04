@@ -47,8 +47,8 @@ public class UserTransferObj {
         response.setRole(data.getRoles());
         response.setVerification(data.getVerification());
         response.setRemoved(data.isRemoved());
-        response.setCreateAt(data.getCratedAt());
-        response.setUpdateAt(data.getUpdatedAt());
+        response.setCreateAt(data.getCratedAt().toString());
+        response.setUpdateAt(data.getUpdatedAt().toString());
         return response;
     }
 

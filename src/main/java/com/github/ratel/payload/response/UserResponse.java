@@ -4,8 +4,6 @@ import com.github.ratel.entity.enums.Roles;
 import com.github.ratel.entity.enums.UserVerificationStatus;
 import lombok.*;
 
-import java.util.Date;
-
 @Getter
 @Setter
 @ToString
@@ -33,8 +31,8 @@ public class UserResponse {
 
     private boolean removed;
 
-    private Date createAt;
+    private String createAt;
 
-    private Date updateAt;
+    private String updateAt;
 
 }

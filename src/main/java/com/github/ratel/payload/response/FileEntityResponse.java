@@ -2,8 +2,6 @@ package com.github.ratel.payload.response;
 
 import lombok.*;
 
-import java.util.Date;
-
 @Getter
 @Setter
 @ToString
@@ -23,8 +21,8 @@ public class FileEntityResponse {
 
     private boolean removed;
 
-    private Date cratedAt;
+    private String cratedAt;
 
-    private Date updatedAt;
+    private String updatedAt;
 
 }

@@ -68,8 +68,8 @@ public class ProductTransferObj {
         response.setSubcategoryId(payload.getSubcategory().getId().toString());
         response.setBrand(payload.getBrand());
         response.setComments(checkComment(payload.getComments()));
-        response.setCratedAt(payload.getCratedAt());
-        response.setUpdatedAt(payload.getUpdatedAt());
+        response.setCratedAt(payload.getCratedAt().toString());
+        response.setUpdatedAt(payload.getUpdatedAt().toString());
         return response;
     }
 

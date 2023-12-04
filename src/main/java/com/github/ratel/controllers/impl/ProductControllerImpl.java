@@ -59,7 +59,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     public ResponseEntity<List<ProductResponse>> findAllForAdmin() {
         return ResponseEntity.ok(
                 this.productService.findAllForAdmin().stream()
-                .map(ProductTransferObj::fromProductForAdmin)
+                .map(ProductTransferObj::fromLazyProduct)
                 .collect(Collectors.toList())
         );
     }
@@ -136,7 +136,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
             if (fileEntity.getId() == imageId) files.remove(fileEntity);
         });
         this.fileService.deleteById(imageId);
-        return ResponseEntity.ok(new MessageResponse("Delete image with id " + imageId + " successful"));
+        return ResponseEntity.ok(new MessageResponse("Delete image successful"));
     }
 
     @Override
@@ -145,6 +145,6 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<MessageResponse> delete(long id) {
         this.productService.deleteById(id);
-        return ResponseEntity.ok(new MessageResponse("Delete image with id " + id + " successful"));
+        return ResponseEntity.ok(new MessageResponse("Delete image successful"));
     }
 }

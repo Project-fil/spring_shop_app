@@ -3,7 +3,6 @@ package com.github.ratel.payload.response;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,8 +33,8 @@ public class ProductResponse {
 
     private Set<CommentResponse> comments;
 
-    private Date cratedAt;
+    private String cratedAt;
 
-    private Date updatedAt;
+    private String updatedAt;
 
 }

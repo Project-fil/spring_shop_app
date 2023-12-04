@@ -56,12 +56,12 @@ public class Order implements Serializable {
     @Column(name = "is_removed")
     private boolean removed;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "last_modified_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 
-    @UpdateTimestamp
+    @CreationTimestamp
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;

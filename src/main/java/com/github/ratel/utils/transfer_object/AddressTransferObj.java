@@ -27,8 +27,8 @@ public class AddressTransferObj {
         response.setHouseNumber(payload.getHouseNumber());
         response.setApartmentNumber(payload.getApartmentNumber());
         response.setUserAddress(ifExist(payload.getUsers()));
-        response.setCreatedDate(payload.getCreatedDate());
-        response.setLastModifiedDate(payload.getLastModifiedDate());
+        response.setCreatedDate(payload.getCreatedDate().toString());
+        response.setLastModifiedDate(payload.getLastModifiedDate().toString());
         return response;
     }
 

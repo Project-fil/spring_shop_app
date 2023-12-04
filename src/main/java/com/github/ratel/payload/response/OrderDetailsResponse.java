@@ -2,22 +2,20 @@ package com.github.ratel.payload.response;
 
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubcategoryResponse {
+public class OrderDetailsResponse {
 
     private Long id;
 
-    private String name;
+    private ProductResponse product;
 
-    private String categoryId;
+    private int quantity;
 
-    private List<ProductResponse> productResponseList;
+    private String price;
 
     private boolean removed;
 

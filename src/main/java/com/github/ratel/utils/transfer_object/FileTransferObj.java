@@ -31,8 +31,8 @@ public class FileTransferObj {
         response.setContentType(fileEntity.getContentType());
         response.setSize(fileEntity.getSize());
         response.setRemoved(fileEntity.isRemoved());
-        response.setCratedAt(fileEntity.getCratedAt());
-        response.setUpdatedAt(fileEntity.getUpdatedAt());
+        response.setCratedAt(fileEntity.getCratedAt().toString());
+        response.setUpdatedAt(fileEntity.getUpdatedAt().toString());
         return response;
     }
 

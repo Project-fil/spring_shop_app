@@ -31,8 +31,8 @@ public class AddressResponse {
 
     private List<UserResponse> userAddress = new ArrayList<>();
 
-    private Date createdDate;
+    private String createdDate;
 
-    private Date lastModifiedDate;
+    private String lastModifiedDate;
 
 }

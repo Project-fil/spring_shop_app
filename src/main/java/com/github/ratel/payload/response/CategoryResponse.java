@@ -20,8 +20,8 @@ public class CategoryResponse {
 
     private boolean removed;
 
-    private Date updateAt;
+    private String updateAt;
 
-    private Date createAt;
+    private String createAt;
 
 }

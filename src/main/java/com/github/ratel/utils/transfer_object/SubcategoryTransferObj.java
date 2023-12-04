@@ -40,8 +40,8 @@ public class SubcategoryTransferObj {
                         .collect(Collectors.toList())
         );
         response.setRemoved(payload.isRemoved());
-        response.setCratedAt(payload.getCratedAt());
-        response.setUpdatedAt(payload.getUpdatedAt());
+        response.setCratedAt(payload.getCratedAt().toString());
+        response.setUpdatedAt(payload.getUpdatedAt().toString());
         return response;
     }
 
