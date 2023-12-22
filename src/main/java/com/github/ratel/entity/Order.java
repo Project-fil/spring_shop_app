@@ -32,14 +32,11 @@ public class Order implements Serializable {
     @Column(name = "id", nullable = false, columnDefinition = "BIGINT", unique = true)
     private Long id;
 
-    @Column(name = "price", nullable = false, columnDefinition = "DECIMAL")
-    private BigDecimal price;
-
-    @Column(name = "total_amount")
-    private int totalAmount;
+    @Column(name = "totalAmount", nullable = false, columnDefinition = "DECIMAL")
+    private BigDecimal totalAmount;
 
     @ToString.Exclude
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "order")
     private Set<OrderDetails> orderedProducts = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

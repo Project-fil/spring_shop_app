@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         this.userService.save(user);
         Cart cart = new Cart();
         cart.setUser(user);
-        this.cartService.create(cart);
+        user.setCart(this.cartService.create(cart));
         this.verificationTokenService.create(new VerificationToken(user, token));
         this.sendGridMailService.sendMessage(
                 user.getEmail(),

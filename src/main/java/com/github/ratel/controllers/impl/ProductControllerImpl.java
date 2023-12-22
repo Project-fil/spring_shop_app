@@ -118,6 +118,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<ProductResponse> addToImageList(Long id, MultipartFile file) {
+        // TODO: 05.12.2023 change to list of files
         Product product = this.productService.findById(id);
         if (Objects.nonNull(file)) {
             product.addFile(this.fileService.create(this.fileHandler.writeFile(file)));
@@ -131,6 +132,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<MessageResponse> deleteFromImageList(long productId, long imageId) {
+        // TODO: 05.12.2023 change to list of files
         Set<FileEntity> files = this.productService.findById(productId).getFiles();
         files.forEach(fileEntity -> {
             if (fileEntity.getId() == imageId) files.remove(fileEntity);

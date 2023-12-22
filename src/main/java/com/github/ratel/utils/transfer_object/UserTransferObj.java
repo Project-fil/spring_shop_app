@@ -6,61 +6,70 @@ import com.github.ratel.payload.response.UserResponse;
 import com.github.ratel.utils.EntityUtil;
 import lombok.experimental.UtilityClass;
 
+import java.util.stream.Collectors;
+
 @UtilityClass
 public class UserTransferObj {
 
-    public static UserResponse fromLazyUser(User data) {
+    public static UserResponse fromLazyUser(User payload) {
         UserResponse response = new UserResponse();
-        response.setId(data.getId());
-        response.setFirstname(data.getFirstname());
-        response.setLastname(data.getLastname());
-        response.setEmail(data.getEmail());
-        response.setImage(FileTransferObj.fromFile(data.getFileEntity()));
-        response.setRole(data.getRoles());
-        response.setVerification(data.getVerification());
+        response.setId(payload.getId());
+        response.setFirstname(payload.getFirstname());
+        response.setLastname(payload.getLastname());
+        response.setEmail(payload.getEmail());
+        response.setImage(FileTransferObj.fromFile(payload.getFileEntity()));
+        response.setRole(payload.getRoles());
+        response.setVerification(payload.getVerification());
         return response;
     }
 
-    public static UserResponse fromUser(User data) {
+    public static UserResponse fromUser(User payload) {
         UserResponse response = new UserResponse();
-        response.setId(data.getId());
-        response.setFirstname(data.getFirstname());
-        response.setLastname(data.getLastname());
-        response.setEmail(data.getEmail());
-        response.setImage(FileTransferObj.fromFile(data.getFileEntity()));
-        response.setAddress(AddressTransferObj.fromLazyAddress(data.getAddress()));
-        response.setCart(CartTransferObject.fromCart(data.getCart()));
-        response.setRole(data.getRoles());
-        response.setVerification(data.getVerification());
+        response.setId(payload.getId());
+        response.setFirstname(payload.getFirstname());
+        response.setLastname(payload.getLastname());
+        response.setEmail(payload.getEmail());
+        response.setImage(FileTransferObj.fromFile(payload.getFileEntity()));
+        response.setAddress(AddressTransferObj.fromLazyAddress(payload.getAddress()));
+        response.setCart(CartTransferObject.fromCart(payload.getCart()));
+        // TODO: 05.12.2023 change get back list orders when is null
+        response.setOrders(
+                payload.getOrders().stream().map(OrderTransferObj::fromLazyOrder).collect(Collectors.toList())
+        );
+        response.setRole(payload.getRoles());
+        response.setVerification(payload.getVerification());
         return response;
     }
 
-    public static UserResponse fromUserForAdmin(User data) {
+    public static UserResponse fromUserForAdmin(User payload) {
         UserResponse response = new UserResponse();
-        response.setId(data.getId());
-        response.setFirstname(data.getFirstname());
-        response.setLastname(data.getLastname());
-        response.setEmail(data.getEmail());
-        response.setImage(FileTransferObj.fromFileForAdmin(data.getFileEntity()));
-        response.setAddress(AddressTransferObj.fromAddress(data.getAddress()));
-        response.setCart(CartTransferObject.fromCart(data.getCart()));
-        response.setRole(data.getRoles());
-        response.setVerification(data.getVerification());
-        response.setRemoved(data.isRemoved());
-        response.setCreateAt(data.getCratedAt().toString());
-        response.setUpdateAt(data.getUpdatedAt().toString());
+        response.setId(payload.getId());
+        response.setFirstname(payload.getFirstname());
+        response.setLastname(payload.getLastname());
+        response.setEmail(payload.getEmail());
+        response.setImage(FileTransferObj.fromFileForAdmin(payload.getFileEntity()));
+        response.setAddress(AddressTransferObj.fromAddress(payload.getAddress()));
+        response.setCart(CartTransferObject.fromCart(payload.getCart()));
+        response.setOrders(
+                payload.getOrders().stream().map(OrderTransferObj::fromLazyOrder).collect(Collectors.toList())
+        );
+        response.setRole(payload.getRoles());
+        response.setVerification(payload.getVerification());
+        response.setRemoved(payload.isRemoved());
+        response.setCreateAt(payload.getCratedAt().toString());
+        response.setUpdateAt(payload.getUpdatedAt().toString());
         return response;
     }
 
-    public static UserResponse fromUserWithoutAddress(User data) {
+    public static UserResponse fromUserWithoutAddress(User payload) {
         UserResponse response = new UserResponse();
-        response.setId(data.getId());
-        response.setFirstname(data.getFirstname());
-        response.setLastname(data.getLastname());
-        response.setEmail(data.getEmail());
-        response.setCart(CartTransferObject.fromCart(data.getCart()));
-        response.setRole(data.getRoles());
-        response.setVerification(data.getVerification());
+        response.setId(payload.getId());
+        response.setFirstname(payload.getFirstname());
+        response.setLastname(payload.getLastname());
+        response.setEmail(payload.getEmail());
+        response.setCart(CartTransferObject.fromCart(payload.getCart()));
+        response.setRole(payload.getRoles());
+        response.setVerification(payload.getVerification());
         return response;
     }
 

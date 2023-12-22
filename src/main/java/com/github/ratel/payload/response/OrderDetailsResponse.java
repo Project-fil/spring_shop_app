@@ -11,11 +11,9 @@ public class OrderDetailsResponse {
 
     private Long id;
 
-    private ProductResponse product;
-
     private int quantity;
 
-    private String price;
+    private ProductResponse product;
 
     private boolean removed;
 

@@ -4,6 +4,8 @@ import com.github.ratel.entity.enums.Roles;
 import com.github.ratel.entity.enums.UserVerificationStatus;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -24,6 +26,8 @@ public class UserResponse {
     private AddressResponse address;
 
     private CartResponse cart;
+
+    private List<OrderResponse> orders;
 
     private Roles role;
 

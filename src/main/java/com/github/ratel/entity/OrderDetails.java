@@ -42,9 +42,6 @@ public class OrderDetails implements Serializable {
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "price")
-    private BigDecimal price;
-
     @Column(name = "is_removed")
     private boolean removed;
 

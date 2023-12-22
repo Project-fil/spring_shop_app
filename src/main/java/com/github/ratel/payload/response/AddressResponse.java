@@ -29,7 +29,7 @@ public class AddressResponse {
 
     private String apartmentNumber;
 
-    private List<UserResponse> userAddress = new ArrayList<>();
+    private List<UserResponse> users = new ArrayList<>();
 
     private String createdDate;
 

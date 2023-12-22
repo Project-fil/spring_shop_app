@@ -63,7 +63,7 @@ public class CartControllerImpl implements CartController {
                 cart = CartTransferObject.addToCart(cart, cartMap);
                 break;
             case UPDATE_ALL:
-                cart = CartTransferObject.toCart(cart, cartMap);
+                cart.setProducts(cartMap);
                 break;
             default:
                 throw new AppException("UpdateStatus can not be null!");

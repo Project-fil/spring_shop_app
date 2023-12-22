@@ -21,11 +21,6 @@ public class CartTransferObject {
         return cartResponse;
     }
 
-    public static Cart toCart(Cart cart, Map<Product, Integer> payload) {
-        cart.setProducts(payload);
-        return cart;
-    }
-
     public static Map<Product, Integer> convertListProductToMap(
             List<Product> productList,
             Map<Long, Integer> requestMap

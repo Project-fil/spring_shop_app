@@ -18,7 +18,7 @@ public interface OrderController {
     @GetMapping("order/get/id/{id}")
     ResponseEntity<OrderResponse> getById(@PathVariable("id") Long id);
 
-    @PostMapping("order/creste")
+    @PostMapping("order/create")
     ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest);
 
     @PutMapping("order/update")

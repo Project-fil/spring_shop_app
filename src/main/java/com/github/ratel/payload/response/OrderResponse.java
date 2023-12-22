@@ -13,13 +13,13 @@ public class OrderResponse {
 
     private Long id;
 
-    private String price;
+    private String totalAmount;
 
-    private Integer totalAmount;
+    private Integer total;
 
     private Set<OrderDetailsResponse> orderedProducts;
 
-    private Long userId;
+    private UserResponse userResponse;
 
     private String note;
 

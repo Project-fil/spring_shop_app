@@ -5,13 +5,14 @@ import com.github.ratel.exceptions.EntityNotFoundException;
 import com.github.ratel.repositories.OrderRepository;
 import com.github.ratel.services.OrderService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
