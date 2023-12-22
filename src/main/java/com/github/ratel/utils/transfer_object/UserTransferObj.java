@@ -1,11 +1,14 @@
 package com.github.ratel.utils.transfer_object;
 
+import com.github.ratel.entity.Order;
 import com.github.ratel.entity.User;
 import com.github.ratel.payload.request.UserUpdateRequest;
+import com.github.ratel.payload.response.OrderResponse;
 import com.github.ratel.payload.response.UserResponse;
 import com.github.ratel.utils.EntityUtil;
 import lombok.experimental.UtilityClass;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -32,10 +35,7 @@ public class UserTransferObj {
         response.setImage(FileTransferObj.fromFile(payload.getFileEntity()));
         response.setAddress(AddressTransferObj.fromLazyAddress(payload.getAddress()));
         response.setCart(CartTransferObject.fromCart(payload.getCart()));
-        // TODO: 05.12.2023 change get back list orders when is null
-        response.setOrders(
-                payload.getOrders().stream().map(OrderTransferObj::fromLazyOrder).collect(Collectors.toList())
-        );
+        response.setOrders(ifExist(payload.getOrders()));
         response.setRole(payload.getRoles());
         response.setVerification(payload.getVerification());
         return response;
@@ -50,9 +50,7 @@ public class UserTransferObj {
         response.setImage(FileTransferObj.fromFileForAdmin(payload.getFileEntity()));
         response.setAddress(AddressTransferObj.fromAddress(payload.getAddress()));
         response.setCart(CartTransferObject.fromCart(payload.getCart()));
-        response.setOrders(
-                payload.getOrders().stream().map(OrderTransferObj::fromLazyOrder).collect(Collectors.toList())
-        );
+        response.setOrders(ifExist(payload.getOrders()));
         response.setRole(payload.getRoles());
         response.setVerification(payload.getVerification());
         response.setRemoved(payload.isRemoved());
@@ -82,6 +80,14 @@ public class UserTransferObj {
         user.getAddress().setStreet(EntityUtil.updateField(user.getAddress().getStreet(), payload.getStreet()));
         user.getAddress().setHouseNumber(EntityUtil.updateField(user.getAddress().getHouseNumber(), payload.getHouseNumber()));
         user.getAddress().setApartmentNumber(EntityUtil.updateField(user.getAddress().getApartmentNumber(), payload.getApartmentNumber()));
+    }
+
+    private static List<OrderResponse> ifExist(List<Order> orders) {
+        if (orders.isEmpty()) {
+            return List.of();
+        } else {
+            return orders.stream().map(OrderTransferObj::fromLazyOrder).collect(Collectors.toList());
+        }
     }
 
 }

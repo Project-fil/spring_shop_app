@@ -36,7 +36,7 @@ public class Order implements Serializable {
     private BigDecimal totalAmount;
 
     @ToString.Exclude
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "order")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "order")
     private Set<OrderDetails> orderedProducts = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

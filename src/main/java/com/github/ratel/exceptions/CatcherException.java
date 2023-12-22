@@ -131,7 +131,7 @@ public class CatcherException extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(
                         new Date(),
                         HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                        ex.getMessage(),
                         request.getRequestURI()
                 )
         );

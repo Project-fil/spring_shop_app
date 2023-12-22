@@ -4,7 +4,9 @@ import com.github.ratel.controllers.interfaces.OrderController;
 import com.github.ratel.entity.Order;
 import com.github.ratel.entity.OrderDetails;
 import com.github.ratel.entity.Product;
+import com.github.ratel.entity.User;
 import com.github.ratel.entity.enums.OrderStatus;
+import com.github.ratel.exceptions.AppException;
 import com.github.ratel.payload.request.OrderRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.OrderResponse;
@@ -68,16 +70,22 @@ public class OrderControllerImpl implements OrderController {
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     public ResponseEntity<OrderResponse> createOrder(OrderRequest orderRequest) {
-        // TODO: 05.12.2023 check and change product quantity and delete ordered product from cart
         Order order = new Order();
-        order.setUser(this.userService.findById(orderRequest.getId()));
+        List<Product> productList = this.productService.findListForIds(new ArrayList<>(orderRequest.getProducts().keySet()));
+        OrderTransferObj.ifExistProductQuantity(productList, orderRequest.getProducts());
+        User user = this.userService.findById(orderRequest.getUserId());
+        productList.forEach(product -> {
+            user.getCart().getProducts().remove(product);
+        });
+        order.setUser(this.userService.updateUser(user));
         order.setNote(orderRequest.getNote());
         order.setOrderStatus(OrderStatus.UNCONFIRMED);
         Set<OrderDetails> orderDetailsSet = OrderDetailsTransferObj.toSetOrderDetails(
-                this.productService.findListForIds(new ArrayList<>(orderRequest.getProducts().keySet())),
+                productList,
                 orderRequest.getProducts()
         );
         order.setTotalAmount(OrderTransferObj.getTotalAmount(orderDetailsSet));
+        productList.forEach(this.productService::update);
         Order finalOrder = this.orderService.create(order);
         orderDetailsSet = this.orderDetailsService.saveOrderDetailsSet(orderDetailsSet, finalOrder);
         finalOrder.setOrderedProducts(orderDetailsSet);
@@ -88,18 +96,32 @@ public class OrderControllerImpl implements OrderController {
     @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<OrderResponse> updateOrder(OrderRequest orderRequest) {
-        // TODO: 05.12.2023 check and change product quantity when OrderStatus is REJECTED
-        Order order = this.orderService.findById(orderRequest.getId());
-        if (orderRequest.getProducts() != null) {
-            Set<OrderDetails> orderDetailsSet = OrderDetailsTransferObj.toSetOrderDetails(
-                    this.productService.findListForIds(new ArrayList<>(orderRequest.getProducts().keySet())),
-                    orderRequest.getProducts()
-            );
-            orderDetailsSet = this.orderDetailsService.saveOrderDetailsSet(orderDetailsSet, order);
-            order.setOrderedProducts(orderDetailsSet);
+    public ResponseEntity<OrderResponse> updateOrder(Long id, String status) {
+        Order order = this.orderService.findById(id);
+        if (status != null) {
+            OrderStatus orderStatus = OrderStatus.valueOf(status);
+            if (orderStatus.equals(OrderStatus.REJECTED)) {
+                if (order.getOrderStatus().equals(OrderStatus.SENT)
+                        || order.getOrderStatus().equals(OrderStatus.SUCCESS)) {
+                    throw new AppException("The parcel has already been sent");
+                } else {
+                    List<Long> productsIds = order.getOrderedProducts().stream()
+                            .map(OrderDetails::getProduct)
+                            .map(Product::getId)
+                            .collect(Collectors.toList());
+                    List<Product> productList = this.productService.findListForIds(productsIds);
+                    order.getOrderedProducts().forEach(orderDetails -> {
+                        productList.forEach(product -> {
+                            if (product.getId().equals(orderDetails.getProduct().getId())) {
+                                product.setQuantity(product.getQuantity() + orderDetails.getQuantity());
+                            }
+                        });
+                    });
+                    productList.forEach(this.productService::update);
+                }
+            }
+            order.setOrderStatus(orderStatus);
         }
-        OrderTransferObj.toOrder(order, orderRequest);
         return ResponseEntity.ok(OrderTransferObj.fromLazyOrder(this.orderService.update(order)));
     }
 

@@ -2,26 +2,19 @@ package com.github.ratel.utils.transfer_object;
 
 import com.github.ratel.entity.Order;
 import com.github.ratel.entity.OrderDetails;
-import com.github.ratel.entity.enums.OrderStatus;
-import com.github.ratel.payload.request.OrderRequest;
+import com.github.ratel.entity.Product;
+import com.github.ratel.exceptions.AppException;
 import com.github.ratel.payload.response.OrderResponse;
-import com.github.ratel.utils.EntityUtil;
 import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @UtilityClass
 public class OrderTransferObj {
-
-    public static void toOrder(Order order, OrderRequest payload) {
-        order.setNote(EntityUtil.updateField(order.getNote(), payload.getNote()));
-        order.setOrderStatus(EntityUtil.updateField(
-                order.getOrderStatus(),
-                OrderStatus.valueOf(payload.getOrderStatus())
-        ));
-    }
 
     public static OrderResponse fromLazyOrder(Order payload) {
         OrderResponse response = new OrderResponse();
@@ -63,6 +56,17 @@ public class OrderTransferObj {
                         new BigDecimal(orderDetail.getQuantity())
                 ).doubleValue())
                 .sum());
+    }
+
+    public static void ifExistProductQuantity(List<Product> productList, Map<Long, Integer> productsMap) {
+        productList.forEach(product -> {
+            if (productsMap.containsKey(product.getId())) {
+                if ((product.getQuantity() - productsMap.get(product.getId())) < 0) {
+                    throw new AppException("Insufficient amount of product with id - " + product.getId());
+                }
+                product.setQuantity(product.getQuantity() - productsMap.get(product.getId()));
+            }
+        });
     }
 
 }

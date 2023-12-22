@@ -44,7 +44,7 @@ public class Subcategory implements Serializable {
     @OneToMany(
             fetch = FetchType.LAZY,
             mappedBy = "subcategory",
-            cascade = CascadeType.MERGE
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE}
             )
     private List<Product> products = new ArrayList<>();
 
@@ -52,12 +52,12 @@ public class Subcategory implements Serializable {
     private boolean removed;
 
     @CreationTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date cratedAt;
 
     @UpdateTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
 

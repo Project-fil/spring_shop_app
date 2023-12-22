@@ -13,12 +13,11 @@ import java.util.Map;
 public class OrderRequest {
 
     @NotNull
-    private Long Id;   // Possibly both a userId for creation and an orderId for updating.
+    private Long userId;
 
+    @NotNull
     private Map<Long, Integer> products;
 
     private String note;
-
-    private String orderStatus;
 
 }

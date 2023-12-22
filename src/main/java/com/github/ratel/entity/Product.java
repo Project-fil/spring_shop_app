@@ -44,7 +44,7 @@ public class Product implements Serializable {
     private BigDecimal price;
 
     @ToString.Exclude
-    @OneToMany(cascade = {CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.MERGE}, orphanRemoval = true)
     @JoinTable(
             name = "product_files",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -69,12 +69,12 @@ public class Product implements Serializable {
     private boolean removed;
 
     @CreationTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date cratedAt;
 
     @UpdateTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
 

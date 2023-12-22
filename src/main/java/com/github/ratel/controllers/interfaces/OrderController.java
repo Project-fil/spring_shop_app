@@ -16,13 +16,13 @@ public interface OrderController {
     ResponseEntity<List<OrderResponse>> getAllByUser(@PathVariable Long userId);
 
     @GetMapping("order/get/id/{id}")
-    ResponseEntity<OrderResponse> getById(@PathVariable("id") Long id);
+    ResponseEntity<OrderResponse> getById(@PathVariable() Long id);
 
     @PostMapping("order/create")
     ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest);
 
-    @PutMapping("order/update")
-    ResponseEntity<OrderResponse> updateOrder(@RequestBody OrderRequest orderRequest);
+    @PutMapping("order/update/{id}/{status}")
+    ResponseEntity<OrderResponse> updateOrder(@PathVariable("id") Long id, @PathVariable("status") String status);
 
     @DeleteMapping("order/delete/{id}")
     ResponseEntity<MessageResponse> deleteOrder(@PathVariable Long id);
