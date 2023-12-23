@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -59,8 +60,8 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     public ResponseEntity<List<ProductResponse>> findAllForAdmin() {
         return ResponseEntity.ok(
                 this.productService.findAllForAdmin().stream()
-                .map(ProductTransferObj::fromLazyProduct)
-                .collect(Collectors.toList())
+                        .map(ProductTransferObj::fromLazyProduct)
+                        .collect(Collectors.toList())
         );
     }
 
@@ -77,7 +78,8 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
         Product getProduct = null;
         try {
             getProduct = this.productService.findById(id);
-        }catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
         if (Objects.isNull(getProduct)) {
             getProduct = this.productService.findByIdForAdmin(id);
         }
@@ -117,13 +119,16 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<ProductResponse> addToImageList(Long id, MultipartFile file) {
-        // TODO: 05.12.2023 change to list of files
+    public ResponseEntity<ProductResponse> addToImageList(Long id, List<MultipartFile> files) {
         Product product = this.productService.findById(id);
-        if (Objects.nonNull(file)) {
-            product.addFile(this.fileService.create(this.fileHandler.writeFile(file)));
+        if (Objects.nonNull(files)) {
+            Set<FileEntity> filesList = files.stream()
+                    .map(this.fileHandler::writeFile)
+                    .map(this.fileService::create)
+                    .collect(Collectors.toSet());
+            product.getFiles().addAll(filesList);
+            this.productService.update(product);
         }
-        this.productService.update(product);
         return ResponseEntity.ok(ProductTransferObj.fromLazyProduct(product));
     }
 
@@ -131,14 +136,19 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<MessageResponse> deleteFromImageList(long productId, long imageId) {
-        // TODO: 05.12.2023 change to list of files
-        Set<FileEntity> files = this.productService.findById(productId).getFiles();
-        files.forEach(fileEntity -> {
-            if (fileEntity.getId() == imageId) files.remove(fileEntity);
-        });
-        this.fileService.deleteById(imageId);
-        return ResponseEntity.ok(new MessageResponse("Delete image successful"));
+    public ResponseEntity<ProductResponse> deleteFromImageList(long productId,  List<Long> imageIdsList) {
+        Product product = this.productService.findById(productId);
+        if (Objects.nonNull(imageIdsList)) {
+            Set<FileEntity> files = product.getFiles();
+            Set<FileEntity> filesForRemove = files.stream()
+                    .filter(fileEntity -> imageIdsList.contains(fileEntity.getId()))
+                    .collect(Collectors.toSet());
+            files.removeAll(filesForRemove);
+            product.setFiles(files);
+            imageIdsList.forEach(this.fileService::deleteById);
+            this.productService.update(product);
+        }
+        return ResponseEntity.ok(ProductTransferObj.fromLazyProduct(product));
     }
 
     @Override

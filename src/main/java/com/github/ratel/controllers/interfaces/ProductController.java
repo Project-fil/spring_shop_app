@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.util.List;
 
@@ -39,11 +40,11 @@ public interface ProductController {
     @PutMapping(value = "product/image/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ProductResponse> addToImageList(
             @RequestParam("id") Long id,
-            @RequestPart("file") MultipartFile file
+            @RequestPart(value = "file", required = false) List<MultipartFile> files
     );
 
-    @DeleteMapping("product/image/delete/{productId}/{imageId}")
-    ResponseEntity<MessageResponse> deleteFromImageList(@PathVariable long productId, @PathVariable long imageId);
+    @DeleteMapping("product/image/delete/{productId}")
+    ResponseEntity<ProductResponse> deleteFromImageList(@PathVariable long productId, @RequestBody List<Long> imageIdsList);
 
     @DeleteMapping("product/delete/{id}")
     ResponseEntity<MessageResponse> delete(@PathVariable long id);
