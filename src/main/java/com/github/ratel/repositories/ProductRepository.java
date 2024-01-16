@@ -15,15 +15,18 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @EntityGraph(attributePaths = {"subcategory", "comments"})
-    Optional<Product>findById(long id);
+    Optional<Product>findByIdAndRemovedFalse(long id);
 
-    List<Product> findAllBySubcategory(Subcategory subcategory);
+    List<Product> findAllBySubcategoryAndRemovedFalse(Subcategory subcategory);
 
-    List<Product> findAllByRemovedTrue();
+    @Query("SELECT p FROM Product p WHERE p.id IN :idList AND p.removed=false")
+    List<Product> findAllByListId(@Param("idList") List<Long> idList);
 
-    @Query("SELECT p FROM Product p WHERE p.id IN :idList")
-    List<Product> findAllByIdIn(@Param("idList") List<Long> idList);
+    @Query("SELECT p FROM Product p WHERE p.removed=true AND LIMIT=:limit")
+    List<Product> findAllForAdmin();
 
-    Optional<Product> findByIdAndRemovedTrue(long id);
+    @EntityGraph(attributePaths = {"subcategory", "comments"})
+    @Query("SELECT p FROM Product p WHERE p.id=:id AND (p.removed=false OR p.removed=true)")
+    Optional<Product> findByIdForAdmin(@Param("id") long id);
 
 }

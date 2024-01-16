@@ -7,6 +7,8 @@ import com.github.ratel.services.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
@@ -25,5 +27,11 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart update(Cart cart) {
         return this.cartRepository.save(cart);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCartByUserId(long userId) {
+        this.cartRepository.deleteCartByUserId(userId);
     }
 }

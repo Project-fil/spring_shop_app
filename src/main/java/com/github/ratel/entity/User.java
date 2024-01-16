@@ -24,7 +24,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE user_table SET is_removed = true WHERE id=?")
-@Where(clause = "is_removed=false")
+//@Where(clause = "is_removed=false")
 public class User implements Serializable {
 
     @Transient
@@ -56,7 +56,7 @@ public class User implements Serializable {
     private Address address;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private Cart cart;
 
     @ToString.Exclude
@@ -131,6 +131,12 @@ public class User implements Serializable {
         if (this.orders.isEmpty())
             this.orders = new ArrayList<>();
         this.orders.add(order);
+    }
+
+    public void setFile(FileEntity fileEntity) {
+        if (Objects.nonNull(fileEntity)) {
+            this.fileEntity = fileEntity;
+        }
     }
 
     @Override

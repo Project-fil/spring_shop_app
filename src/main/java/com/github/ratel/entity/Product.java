@@ -20,7 +20,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE products SET is_removed = true WHERE id=?")
-@Where(clause = "is_removed=false")
+//@Where(clause = "is_removed=false")
 public class Product implements Serializable {
 
     @Transient
@@ -44,7 +44,7 @@ public class Product implements Serializable {
     private BigDecimal price;
 
     @ToString.Exclude
-    @OneToMany(cascade = {CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinTable(
             name = "product_files",
             joinColumns = @JoinColumn(name = "product_id"),

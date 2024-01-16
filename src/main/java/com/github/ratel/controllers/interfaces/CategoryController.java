@@ -12,10 +12,13 @@ import java.util.List;
 public interface CategoryController {
 
     @GetMapping("free/category/all")
-    ResponseEntity<List<CategoryResponse>> readAllCategory();
+    ResponseEntity<List<CategoryResponse>> findAllCategory(
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    );
 
-    @GetMapping("category/admin")
-    ResponseEntity<List<CategoryResponse>> readAllCategoryForAdmin();
+    @GetMapping("category/admin/{limit}")
+    ResponseEntity<List<CategoryResponse>> findAllCategoryForAdmin(@PathVariable int limit);
 
     @GetMapping("free/category/id/{id}")
     ResponseEntity<CategoryResponse> findById(@PathVariable Long id);

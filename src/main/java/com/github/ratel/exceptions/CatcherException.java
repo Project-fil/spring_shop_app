@@ -38,7 +38,7 @@ public class CatcherException extends ResponseEntityExceptionHandler {
                 .findFirst().orElse(null);
         if (Objects.isNull(errorField)) log.error(ex.getMessage());
         else log.error("Error field [{}] with message: {}", errorField, errorMessage);
-        return ResponseEntity.badRequest().body(new MessageResponse(errorMessage));
+        return ResponseEntity.badRequest().body(new MessageResponse(errorMessage, new Date()));
     }
 
     @ExceptionHandler(value = ConfirmPasswordException.class)

@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
 
-    Optional<VerificationToken> findByToken(String token);
+    Optional<VerificationToken> findByTokenAndRemovedFalse(String token);
 
 //    @Modifying
 //    @Query(value = "update VerificationToken c set c.status=:status where c.id=:id")

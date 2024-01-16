@@ -3,6 +3,7 @@ package com.github.ratel.controllers.interfaces;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.SubcategoryResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +12,15 @@ import java.util.List;
 @SecurityRequirement(name = "Authorization")
 public interface SubcategoryController {
 
-    @GetMapping("free/subcategory/all/{categoryId}")
-    ResponseEntity<List<SubcategoryResponse>> readAll(@PathVariable long categoryId);
+    @GetMapping("free/subcategory/all")
+    ResponseEntity<List<SubcategoryResponse>> findAll(
+            @RequestParam long categoryId,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    );
 
-    @GetMapping("subcategory/all/admin/{categoryId}")
-    ResponseEntity<List<SubcategoryResponse>> readAllForAdmin(@PathVariable long categoryId);
+    @GetMapping("subcategory/all/admin/{categoryId}/{limit}")
+    ResponseEntity<List<SubcategoryResponse>> findAllForAdmin(@PathVariable long categoryId, @PathVariable int limit);
 
     @GetMapping("free/subcategory/id/{id}")
     ResponseEntity<SubcategoryResponse> findById(@PathVariable long id);

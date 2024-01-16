@@ -23,10 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin("*")
@@ -157,6 +154,9 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<MessageResponse> delete(long id) {
         this.productService.deleteById(id);
-        return ResponseEntity.ok(new MessageResponse("Delete image successful"));
+        return ResponseEntity.ok(new MessageResponse(
+                "Delete image successful",
+                new Date()
+        ));
     }
 }

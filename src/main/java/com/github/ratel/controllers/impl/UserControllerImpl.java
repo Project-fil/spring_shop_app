@@ -8,10 +8,14 @@ import com.github.ratel.handlers.FileHandler;
 import com.github.ratel.payload.request.UserUpdateRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.UserResponse;
+import com.github.ratel.services.CartService;
 import com.github.ratel.services.FileService;
 import com.github.ratel.services.UserService;
+import com.github.ratel.utils.EntityUtil;
 import com.github.ratel.utils.transfer_object.UserTransferObj;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -31,6 +36,8 @@ import java.util.stream.Collectors;
 public class UserControllerImpl implements ApiSecurityHeader, UserController {
 
     private final UserService userService;
+
+    private final CartService cartService;
 
     private final FileService fileService;
 
@@ -47,21 +54,25 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<List<UserResponse>> findAllActiveUsers() {
-        return ResponseEntity.ok(this.userService.findAllUsers().stream()
+    public ResponseEntity<List<UserResponse>> findAllActiveUsers(int page, int size, String sortBy, String sortDirection) {
+        Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        List<UserResponse> userResponseList = this.userService.findAllUsers(pageRequest).get()
                 .map(UserTransferObj::fromLazyUser)
-                .collect(Collectors.toList())
-        );
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(userResponseList);
     }
 
     @Override
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<List<UserResponse>> findAllUsersForAdmin() {
-        return ResponseEntity.ok(this.userService.findAllUsersForAdmin().stream()
+    public ResponseEntity<List<UserResponse>> findAllUsersForAdmin(int page, int size, String sortBy, String sortDir) {
+        Sort.Direction direction = EntityUtil.getSortDirection(sortDir);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        List<UserResponse> userResponseList = this.userService.findAllUsersForAdmin(pageRequest).get()
                 .map(UserTransferObj::fromUserForAdmin)
-                .collect(Collectors.toList())
-        );
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(userResponseList);
     }
 
     @Override
@@ -75,14 +86,7 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<UserResponse> getUserByIdForAdmin(Long userId) {
-        User getUser = null;
-        try {
-            getUser = this.userService.findById(userId);
-        } catch (Exception ignore) {}
-        if (Objects.isNull(getUser)) {
-            getUser = this.userService.findUserForAdmin(userId);
-        }
-        return ResponseEntity.ok(UserTransferObj.fromUserForAdmin(getUser));
+        return ResponseEntity.ok(UserTransferObj.fromUserForAdmin(this.userService.findUserForAdmin(userId)));
     }
 
     @Override
@@ -97,7 +101,7 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
             fileEntity = this.fileService.create(this.fileHandler.writeFile(image));
             if (Objects.nonNull(user.getFileEntity())) this.fileService.deleteById(user.getFileEntity().getId());
         }
-        user.setFileEntity(fileEntity);
+        user.setFile(fileEntity);
         return ResponseEntity.ok(UserTransferObj.fromUser(this.userService.updateUser(user)));
     }
 
@@ -106,6 +110,11 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<MessageResponse> deleteUser(Long userId) {
-        return ResponseEntity.ok(new MessageResponse(this.userService.deleteUserById(userId)));
+        this.userService.deleteUserById(userId);
+        this.cartService.deleteCartByUserId(userId);
+        return ResponseEntity.ok(new MessageResponse(
+                "User with id " + userId + " deleted",
+                new Date()
+        ));
     }
 }

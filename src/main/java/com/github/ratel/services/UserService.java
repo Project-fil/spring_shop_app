@@ -2,6 +2,8 @@ package com.github.ratel.services;
 
 import com.github.ratel.entity.User;
 import com.github.ratel.entity.enums.Roles;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
 import java.util.List;
@@ -10,9 +12,9 @@ public interface UserService {
 
     User getCurrentUser(Principal principal);
 
-    List<User> findAllUsers();
+    Page<User> findAllUsers(Pageable pageable);
 
-    List<User> findAllUsersForAdmin();
+    Page<User> findAllUsersForAdmin(Pageable pageable);
 
     User findById(Long id);
 
@@ -26,7 +28,7 @@ public interface UserService {
 
     User updateUser(User user);
 
-    String deleteUserById(Long userId);
+    void deleteUserById(Long userId);
 
     User checkUserByEmail(String email);
 

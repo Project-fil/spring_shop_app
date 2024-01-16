@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -131,7 +132,10 @@ public class OrderControllerImpl implements OrderController {
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<MessageResponse> deleteOrder(Long id) {
         this.orderService.delete(id);
-        return ResponseEntity.ok(new MessageResponse("Order deleted"));
+        return ResponseEntity.ok(new MessageResponse(
+                "Order deleted",
+                new Date()
+        ));
     }
 
 }

@@ -23,7 +23,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
     @Override
     public VerificationToken findByToken(String token) {
-        return this.tokenRepository.findByToken(token)
+        return this.tokenRepository.findByTokenAndRemovedFalse(token)
                 .orElseThrow( () -> new EntityNotFoundException(StatusCode.NOT_FOUND));
     }
 

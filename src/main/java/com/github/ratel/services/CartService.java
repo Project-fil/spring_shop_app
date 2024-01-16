@@ -10,4 +10,6 @@ public interface CartService {
 
     Cart update(Cart cart);
 
+    void deleteCartByUserId(long userId);
+
 }

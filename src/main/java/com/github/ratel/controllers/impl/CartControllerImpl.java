@@ -6,6 +6,7 @@ import com.github.ratel.entity.Product;
 import com.github.ratel.exceptions.AppException;
 import com.github.ratel.payload.request.CartRequest;
 import com.github.ratel.payload.response.CartResponse;
+import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.services.CartService;
 import com.github.ratel.services.ProductService;
 import com.github.ratel.services.UserService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +71,15 @@ public class CartControllerImpl implements CartController {
                 throw new AppException("UpdateStatus can not be null!");
         }
         return ResponseEntity.ok(CartTransferObject.fromCart(this.cartService.update(cart)));
+    }
+
+    @Override
+    public ResponseEntity<MessageResponse> deleteByUserId(long userId) {
+        this.cartService.deleteCartByUserId(userId);
+        return ResponseEntity.ok(new MessageResponse(
+                "Cart with id " + userId + " deleted",
+                new Date()
+        ));
     }
 
 }

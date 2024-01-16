@@ -2,6 +2,7 @@ package com.github.ratel.utils;
 
 import com.github.ratel.exceptions.NotValidException;
 import lombok.experimental.UtilityClass;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.Assert;
 
 import javax.validation.Valid;
@@ -14,6 +15,10 @@ import java.util.Objects;
 
 @UtilityClass
 public class EntityUtil {
+
+    public static Sort.Direction getSortDirection(String sortDir) {
+        return sortDir.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+    }
 
     public static <T> T updateField(T fieldData, T fieldPayload) {
         if (fieldPayload != "" && fieldPayload != null) {

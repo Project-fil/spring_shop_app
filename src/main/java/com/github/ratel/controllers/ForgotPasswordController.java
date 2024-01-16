@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.UUID;
 
 @Slf4j
@@ -58,7 +59,10 @@ public class ForgotPasswordController {
         } else {
             throw new WrongUserEmail(StatusCode.WRONG_USER_EMAIL);
         }
-        return ResponseEntity.ok(new MessageResponse("Use your email to confirm your password"));
+        return ResponseEntity.ok(new MessageResponse(
+                "Use your email to confirm your password",
+                new Date()
+        ));
     }
 
     @GetMapping("free/password")
@@ -74,6 +78,9 @@ public class ForgotPasswordController {
         } else {
             throw new InvalidTokenException("Invalid token");
         }
-        return ResponseEntity.status(200).body(new MessageResponse("Password change was successful"));
+        return ResponseEntity.status(200).body(new MessageResponse(
+                "Password change was successful",
+                new Date()
+        ));
     }
 }

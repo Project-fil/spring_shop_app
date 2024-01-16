@@ -5,6 +5,7 @@ import com.github.ratel.exceptions.EntityNotFoundException;
 import com.github.ratel.repositories.CategoryRepository;
 import com.github.ratel.services.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,13 +17,13 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> findAllCategory() {
-        return this.categoryRepository.findAll(); // todo research Sort functional
+    public List<Category> findAllCategory(Sort sort) {
+        return this.categoryRepository.findAll(sort);
     }
 
     @Override
-    public List<Category> findAllCategoryForAdmin() {
-        return this.categoryRepository.findAllByRemovedTrue();
+    public List<Category> findAllCategoryForAdmin(int limit) {
+        return this.categoryRepository.findAllForAdmin(limit);
     }
 
     @Override
@@ -33,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getByIdForAdmin(long id) {
-        return this.categoryRepository.findByIdAndRemovedTrue(id)
+        return this.categoryRepository.findByIdForAdmin(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
     }
 

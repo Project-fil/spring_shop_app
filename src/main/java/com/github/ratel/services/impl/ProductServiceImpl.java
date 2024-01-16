@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -19,28 +18,28 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findAllInSubcategory(Subcategory subcategory) {
-        return this.productRepository.findAllBySubcategory(subcategory);
+        return this.productRepository.findAllBySubcategoryAndRemovedFalse(subcategory);
     }
 
     @Override
     public List<Product> findListForIds(List<Long> products) {
-        return this.productRepository.findAllByIdIn(products);
+        return this.productRepository.findAllByListId(products);
     }
 
     @Override
     public List<Product> findAllForAdmin() {
-        return this.productRepository.findAllByRemovedTrue();
+        return this.productRepository.findAllForAdmin();
     }
 
     @Override
     public Product findById(long id) {
-        return this.productRepository.findById(id)
+        return this.productRepository.findByIdAndRemovedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
     }
 
     @Override
     public Product findByIdForAdmin(long id) {
-        return this.productRepository.findByIdAndRemovedTrue(id).orElseThrow(
+        return this.productRepository.findByIdForAdmin(id).orElseThrow(
                 () -> new EntityNotFoundException("Product not found")
         );
     }

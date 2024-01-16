@@ -11,6 +11,8 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    // TODO: 16.01.2024 use Pageable fo all methods findAll
+
     @EntityGraph(attributePaths = "user")
     Optional<Order> findById(long id);
 

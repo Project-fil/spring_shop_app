@@ -20,7 +20,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Table(name = "verification_token")
 @SQLDelete(sql = "UPDATE verification_token SET is_removed = true WHERE id=?")
-@Where(clause = "is_removed=false")
 public class VerificationToken implements Serializable {
 
     @Transient
