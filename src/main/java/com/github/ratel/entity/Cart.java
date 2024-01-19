@@ -21,7 +21,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE cart SET is_removed = true WHERE id=?")
-@Where(clause = "is_removed=false")
 public class Cart implements Serializable {
 
     @Transient

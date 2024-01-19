@@ -3,7 +3,6 @@ package com.github.ratel.controllers.interfaces;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.SubcategoryResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,7 @@ public interface SubcategoryController {
     ResponseEntity<SubcategoryResponse> findById(@PathVariable long id);
 
     @GetMapping("subcategory/admin/id/{id}")
-    ResponseEntity<SubcategoryResponse> getByIdForAdmin(@PathVariable long id);
+    ResponseEntity<SubcategoryResponse> findByIdForAdmin(@PathVariable long id);
 
     @PostMapping("subcategory/create/{categoryId}/{name}")
     ResponseEntity<SubcategoryResponse> createSubcategory(@PathVariable long categoryId, @PathVariable String name);
@@ -35,6 +34,6 @@ public interface SubcategoryController {
     ResponseEntity<SubcategoryResponse> updateSubcategory(@PathVariable long subCategoryId, @PathVariable String name);
 
     @DeleteMapping("subcategory/delete")
-    ResponseEntity<MessageResponse> deleteSubcategory (@RequestParam long id);
+    ResponseEntity<MessageResponse> deleteSubcategory(@RequestParam long id);
 
 }

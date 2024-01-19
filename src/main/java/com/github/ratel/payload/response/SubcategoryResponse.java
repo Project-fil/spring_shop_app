@@ -19,7 +19,7 @@ public class SubcategoryResponse {
 
     private List<ProductResponse> productResponseList;
 
-    private boolean removed;
+    private Boolean removed;
 
     private String cratedAt;
 

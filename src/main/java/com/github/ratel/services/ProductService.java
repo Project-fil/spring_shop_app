@@ -2,17 +2,18 @@ package com.github.ratel.services;
 
 import com.github.ratel.entity.Product;
 import com.github.ratel.entity.Subcategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ProductService {
 
-    List<Product> findAllInSubcategory(Subcategory subcategory);
+    Page<Product> findAllInSubcategory(Subcategory subcategory, Pageable pageable);
 
     List<Product> findListForIds(List<Long> products);
 
-    List<Product> findAllForAdmin();
+    Page<Product> findAllForAdmin(Pageable pageable);
 
     Product findById(long id);
 

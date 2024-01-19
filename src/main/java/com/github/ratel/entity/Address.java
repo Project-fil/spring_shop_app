@@ -22,7 +22,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE user_address SET is_removed = true WHERE id=?")
-@Where(clause = "is_removed=false")
 public class Address implements Serializable {
 
     @Transient

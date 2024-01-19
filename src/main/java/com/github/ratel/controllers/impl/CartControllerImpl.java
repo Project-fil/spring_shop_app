@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -39,14 +38,14 @@ public class CartControllerImpl implements CartController {
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<CartResponse> getUserCartById(Principal principal) {
+    public ResponseEntity<CartResponse> findUserCartById(Principal principal) {
         return ResponseEntity.ok(CartTransferObject.fromCart(this.userService.getCurrentUser(principal).getCart()));
     }
 
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<CartResponse> getUserCartById(long cartId) {
+    public ResponseEntity<CartResponse> findUserCartById(long cartId) {
         return ResponseEntity.ok(CartTransferObject.fromCart(this.cartService.findById(cartId)));
     }
 

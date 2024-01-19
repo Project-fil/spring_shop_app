@@ -33,7 +33,7 @@ public class UserResponse {
 
     private UserVerificationStatus verification;
 
-    private boolean removed;
+    private Boolean removed;
 
     private String createAt;
 

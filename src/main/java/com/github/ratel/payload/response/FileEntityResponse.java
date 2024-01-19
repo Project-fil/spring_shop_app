@@ -19,7 +19,7 @@ public class FileEntityResponse {
 
     private long size;
 
-    private boolean removed;
+    private Boolean removed;
 
     private String cratedAt;
 

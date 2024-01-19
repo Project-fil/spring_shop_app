@@ -15,7 +15,7 @@ public class OrderDetailsResponse {
 
     private ProductResponse product;
 
-    private boolean removed;
+    private Boolean removed;
 
     private String cratedAt;
 

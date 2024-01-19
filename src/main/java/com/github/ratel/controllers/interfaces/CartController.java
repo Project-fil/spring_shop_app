@@ -13,10 +13,10 @@ import java.security.Principal;
 public interface CartController {
 
     @GetMapping("cart")
-    ResponseEntity<CartResponse> getUserCartById(Principal principal);
+    ResponseEntity<CartResponse> findUserCartById(Principal principal);
 
     @GetMapping("cart/{cartId}")
-    ResponseEntity<CartResponse> getUserCartById(@PathVariable long cartId);
+    ResponseEntity<CartResponse> findUserCartById(@PathVariable long cartId);
 
     @PutMapping("cart/update/")
     ResponseEntity<CartResponse> updateUserCart(@RequestBody CartRequest cartRequest);

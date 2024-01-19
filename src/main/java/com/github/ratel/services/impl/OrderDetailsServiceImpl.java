@@ -20,12 +20,12 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 
     @Override
     public List<OrderDetails> findAllByOrderId(long orderId) {
-        return this.orderDetailsRepository.findAllByOrderId(orderId);
+        return this.orderDetailsRepository.findAllByOrderIdAndRemovedFalse(orderId);
     }
 
     @Override
     public OrderDetails findById(long id) {
-        return this.orderDetailsRepository.findById(id)
+        return this.orderDetailsRepository.findByIdAndRemovedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("OrderDetails not found"));
     }
 

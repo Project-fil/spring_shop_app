@@ -4,16 +4,14 @@ import com.github.ratel.payload.request.UserUpdateRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.UserResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 
 @SecurityRequirement(name = "Authorization")
 public interface UserController {
@@ -22,19 +20,19 @@ public interface UserController {
     ResponseEntity<UserResponse> getCurrentUser(Principal principal);
 
     @GetMapping("/user/all")
-    ResponseEntity<List<UserResponse>> findAllActiveUsers(
+    ResponseEntity<Page<UserResponse>> findAllActiveUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir
+            @RequestParam(defaultValue = "asc") String sortDirection
     );
 
     @GetMapping("/user/all/admin")
-    ResponseEntity<List<UserResponse>> findAllUsersForAdmin(
+    ResponseEntity<Page<UserResponse>> findAllUsersForAdmin(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir
+            @RequestParam(defaultValue = "asc") String sortDirection
     );
 
     @GetMapping("/{userId}")

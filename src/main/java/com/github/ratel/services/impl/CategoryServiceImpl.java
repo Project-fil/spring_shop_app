@@ -18,7 +18,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> findAllCategory(Sort sort) {
-        return this.categoryRepository.findAll(sort);
+        return this.categoryRepository.findAllByRemovedFalse(sort);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category findById(long id) {
-        return this.categoryRepository.findById(id)
+        return this.categoryRepository.findByIdAndRemovedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
     }
 

@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Modifying;
 
+import java.util.Optional;
+
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
@@ -14,4 +16,5 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Query(value = "UPDATE user_cart SET is_removed=true WHERE user_id=:userId", nativeQuery = true)
     void deleteCartByUserId(@Param("userId") long userId);
 
+    Optional<Cart> findByIdAndRemovedFalse(long id);
 }

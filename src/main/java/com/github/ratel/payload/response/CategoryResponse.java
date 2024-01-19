@@ -18,7 +18,7 @@ public class CategoryResponse {
 
     private Set<SubcategoryResponse> subcategories;
 
-    private boolean removed;
+    private Boolean removed;
 
     private String updateAt;
 

@@ -4,6 +4,7 @@ import com.github.ratel.payload.request.ProductRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.ProductResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +17,21 @@ import java.util.List;
 public interface ProductController {
 
     @GetMapping("free/product/find/all/{subcategoryId}")
-    ResponseEntity<List<ProductResponse>> findAll(@PathVariable long subcategoryId);
+    ResponseEntity<Page<ProductResponse>> findAll(
+            @RequestParam long subcategoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    );
 
     @GetMapping("product/find/all/admin")
-    ResponseEntity<List<ProductResponse>> findAllForAdmin();
+    ResponseEntity<Page<ProductResponse>> findAllForAdmin(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    );
 
     @GetMapping("free/product/find/id/{id}")
     ResponseEntity<ProductResponse> findById(@PathVariable long id);
@@ -31,7 +43,7 @@ public interface ProductController {
     ResponseEntity<ProductResponse> create(
             @RequestPart(value = "body") ProductRequest productRequest,
             @RequestPart(value = "file", required = false) List<MultipartFile> files
-            ) throws IOException;
+    ) throws IOException;
 
     @PutMapping("product/update/{id}")
     ResponseEntity<ProductResponse> update(@PathVariable long id, @RequestBody ProductRequest productRequest);

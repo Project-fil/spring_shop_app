@@ -23,7 +23,7 @@ public class SubcategoryTransferObj {
         response.setCategoryId(payload.getCategory().getId().toString());
         response.setProductResponseList(
                 payload.getProducts().stream()
-                        .map(ProductTransferObj::fromProduct)
+                        .map(ProductTransferObj::fromLazyProduct)
                         .collect(Collectors.toList())
         );
         return response;
@@ -36,7 +36,7 @@ public class SubcategoryTransferObj {
         response.setCategoryId(payload.getCategory().getId().toString());
         response.setProductResponseList(
                 payload.getProducts().stream()
-                        .map(ProductTransferObj::fromProduct)
+                        .map(ProductTransferObj::fromLazyProduct)
                         .collect(Collectors.toList())
         );
         response.setRemoved(payload.isRemoved());

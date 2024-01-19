@@ -16,13 +16,13 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address findById(Long id) {
-        return this.addressRepository.findById(id)
+        return this.addressRepository.findByIdAndRemovedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Address not found"));
     }
 
     @Override
     public Address findByPhone(String phone) {
-        return this.addressRepository.findByPhone(phone)
+        return this.addressRepository.findByPhoneAndRemovedFalse(phone)
                 .orElseThrow(() -> new EntityNotFoundException("Address not found"));
     }
 

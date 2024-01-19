@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -25,13 +26,13 @@ public class ProductResponse {
 
     private Set<FileEntityResponse> files = new HashSet<>();
 
-    private int quantity;
+    private Integer quantity;
 
     private String subcategoryId;
 
     private String brand;
 
-    private Set<CommentResponse> comments;
+    private List<CommentResponse> comments;
 
     private String cratedAt;
 

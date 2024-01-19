@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,7 +35,6 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
     public ResponseEntity<List<CategoryResponse>> findAllCategory(String sortBy, String sortDirection) {
         Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
         return ResponseEntity.ok(this.categoryService.findAllCategory(Sort.by(direction, sortBy)).stream()
-                .sorted(Comparator.comparing(Category::getId))
                 .map(CategoryTransferObj::fromLazyCategory)
                 .collect(Collectors.toList()));
     }
@@ -47,7 +44,7 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
     @Secured("ROLE_ADMIN")
     public ResponseEntity<List<CategoryResponse>> findAllCategoryForAdmin(int limit) {
         return ResponseEntity.ok(this.categoryService.findAllCategoryForAdmin(limit).stream()
-                .map(CategoryTransferObj::fromCategoryForAdmin)
+                .map(CategoryTransferObj::fromCategory)
                 .collect(Collectors.toList())
         );
     }
@@ -61,15 +58,8 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
     @Override
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<CategoryResponse> getByIdForAdmin(Long id) {
-        Category getCategory = null;
-        try {
-            getCategory = this.categoryService.findById(id);
-        } catch (Exception ignore) {}
-        if (Objects.isNull(getCategory)) {
-            getCategory = this.categoryService.getByIdForAdmin(id);
-        }
-        return ResponseEntity.ok(CategoryTransferObj.fromCategoryForAdmin(getCategory));
+    public ResponseEntity<CategoryResponse> findByIdForAdmin(Long id) {
+        return ResponseEntity.ok(CategoryTransferObj.fromCategoryForAdmin(this.categoryService.getByIdForAdmin(id)));
     }
 
     @Override
@@ -93,7 +83,7 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<MessageResponse> deleteCategory (long id) {
+    public ResponseEntity<MessageResponse> deleteCategory(long id) {
         this.categoryService.deleteCategoryById(id);
         return ResponseEntity.ok(new MessageResponse(
                 "Category deleted",

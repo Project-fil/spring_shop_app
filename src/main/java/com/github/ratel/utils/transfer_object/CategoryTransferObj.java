@@ -22,7 +22,7 @@ public class CategoryTransferObj {
         response.setName(payload.getName());
         response.setSubcategories(
                 payload.getSubcategories().stream()
-                        .map(SubcategoryTransferObj::fromSubcategory)
+                        .map(SubcategoryTransferObj::fromLazySubcategory)
                         .collect(Collectors.toSet())
         );
         return response;

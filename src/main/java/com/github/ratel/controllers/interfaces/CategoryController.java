@@ -24,7 +24,7 @@ public interface CategoryController {
     ResponseEntity<CategoryResponse> findById(@PathVariable Long id);
 
     @GetMapping("category/admin/id/{id}")
-    ResponseEntity<CategoryResponse> getByIdForAdmin(@PathVariable Long id);
+    ResponseEntity<CategoryResponse> findByIdForAdmin(@PathVariable Long id);
 
     @PostMapping("category/create/{name}")
     ResponseEntity<CategoryResponse> createCategory(@PathVariable String name);
@@ -33,6 +33,6 @@ public interface CategoryController {
     ResponseEntity<CategoryResponse> updateCategory(@PathVariable long id, @PathVariable String name);
 
     @DeleteMapping("category/delete")
-    ResponseEntity<MessageResponse> deleteCategory (@RequestParam long id);
+    ResponseEntity<MessageResponse> deleteCategory(@RequestParam long id);
 
 }

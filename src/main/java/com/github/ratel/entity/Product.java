@@ -20,7 +20,6 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE products SET is_removed = true WHERE id=?")
-//@Where(clause = "is_removed=false")
 public class Product implements Serializable {
 
     @Transient
@@ -43,6 +42,8 @@ public class Product implements Serializable {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
+    // TODO: 16.01.2024 Is it need this another one table
+
     @ToString.Exclude
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinTable(
@@ -63,7 +64,7 @@ public class Product implements Serializable {
     private String brand;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private Set<Comment> comments;
+    private List<Comment> comments;
 
     @Column(name = "is_removed")
     private boolean removed;
@@ -100,7 +101,7 @@ public class Product implements Serializable {
 
     public void addComment(Comment comment) {
         if (this.comments.isEmpty())
-            this.comments = new HashSet<>();
+            this.comments = new ArrayList<>();
         this.comments.add(comment);
     }
 

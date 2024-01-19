@@ -10,9 +10,13 @@ import java.util.Optional;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    @EntityGraph(attributePaths = "users")
-    Optional<Address> findById(long id);
+    // TODO: 16.01.2024 create methods for admin (maybe)
 
-    Optional<Address> findByPhone(String phone);
+    @EntityGraph(attributePaths = "users")
+    Optional<Address> findByIdAndRemovedFalse(long id);
+
+    Optional<Address> findByPhoneAndRemovedFalse(String phone);
+
+
 
 }

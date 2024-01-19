@@ -17,7 +17,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart findById(long id) {
-        return this.cartRepository.findById(id)
+        return this.cartRepository.findByIdAndRemovedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
     }
 

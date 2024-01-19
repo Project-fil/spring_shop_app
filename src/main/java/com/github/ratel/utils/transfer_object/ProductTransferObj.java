@@ -9,6 +9,7 @@ import com.github.ratel.utils.EntityUtil;
 import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -83,11 +84,11 @@ public class ProductTransferObj {
         return product;
     }
 
-    private static Set<CommentResponse> checkComment(Set<Comment> comments) {
+    private static List<CommentResponse> checkComment(List<Comment> comments) {
         if(Objects.isNull(comments)) {
-            return Set.of();
+            return List.of();
         }
-        return comments.stream().map(CommentsTransferObj::fromComment).collect(Collectors.toSet());
+        return comments.stream().map(CommentsTransferObj::fromComment).collect(Collectors.toList());
     }
 
     public static Product updateProduct(Product product, ProductRequest payload) {

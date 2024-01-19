@@ -1,6 +1,7 @@
 package com.github.ratel.repositories;
 
 import com.github.ratel.entity.Category;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +15,9 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @EntityGraph(attributePaths = "subcategories")
-    Optional<Category> findById(long id);
+    Optional<Category> findByIdAndRemovedFalse(long id);
+
+    List<Category> findAllByRemovedFalse(Sort sort);
 
     @Query(value = "SELECT * FROM categories WHERE is_removed=true LIMIT :limit", nativeQuery = true)
     List<Category> findAllForAdmin(@Param("limit") int limit);

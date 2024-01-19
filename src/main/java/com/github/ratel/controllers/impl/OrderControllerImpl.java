@@ -14,9 +14,13 @@ import com.github.ratel.services.OrderDetailsService;
 import com.github.ratel.services.OrderService;
 import com.github.ratel.services.ProductService;
 import com.github.ratel.services.UserService;
+import com.github.ratel.utils.EntityUtil;
 import com.github.ratel.utils.transfer_object.OrderDetailsTransferObj;
 import com.github.ratel.utils.transfer_object.OrderTransferObj;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,21 +52,50 @@ public class OrderControllerImpl implements OrderController {
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<List<OrderResponse>> getAllByUser(Long userId) {
-        List<Order> allByUser = this.orderService.findAllByUser(userId);
-        return ResponseEntity.ok(
-                allByUser.stream()
-                        .map(OrderTransferObj::fromLazyOrder)
-                        .collect(Collectors.toList())
-        );
+    public ResponseEntity<Page<OrderResponse>> findAllByUser(
+            long userId,
+            int page,
+            int size,
+            String sortBy,
+            String sortDirection
+    ) {
+        Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return ResponseEntity.ok(this.orderService.findAllByUser(userId, pageRequest)
+                .map(OrderTransferObj::fromLazyOrder));
+    }
+
+    @Override
+    @CrossOrigin("*")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<Page<OrderResponse>> findAllByUserForAdmin(
+            long userId,
+            int page,
+            int size,
+            String sortBy,
+            String sortDirection
+    ) {
+        Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return ResponseEntity.ok(this.orderService.findAllForAdmin(userId, pageRequest)
+                .map(OrderTransferObj::fromLazyOrder));
     }
 
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<OrderResponse> getById(Long id) {
+    public ResponseEntity<OrderResponse> findById(Long id) {
         return ResponseEntity.ok(OrderTransferObj.fromOrder(
                 this.orderService.findById(id)
+        ));
+    }
+
+    @Override
+    @CrossOrigin("*")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<OrderResponse> findByIdForAdmin(Long id) {
+        return ResponseEntity.ok(OrderTransferObj.fromOrder(
+                this.orderService.findByIdForAdmin(id)
         ));
     }
 
@@ -75,9 +108,7 @@ public class OrderControllerImpl implements OrderController {
         List<Product> productList = this.productService.findListForIds(new ArrayList<>(orderRequest.getProducts().keySet()));
         OrderTransferObj.ifExistProductQuantity(productList, orderRequest.getProducts());
         User user = this.userService.findById(orderRequest.getUserId());
-        productList.forEach(product -> {
-            user.getCart().getProducts().remove(product);
-        });
+        productList.forEach(product -> user.getCart().getProducts().remove(product));
         order.setUser(this.userService.updateUser(user));
         order.setNote(orderRequest.getNote());
         order.setOrderStatus(OrderStatus.UNCONFIRMED);
@@ -111,13 +142,11 @@ public class OrderControllerImpl implements OrderController {
                             .map(Product::getId)
                             .collect(Collectors.toList());
                     List<Product> productList = this.productService.findListForIds(productsIds);
-                    order.getOrderedProducts().forEach(orderDetails -> {
-                        productList.forEach(product -> {
-                            if (product.getId().equals(orderDetails.getProduct().getId())) {
-                                product.setQuantity(product.getQuantity() + orderDetails.getQuantity());
-                            }
-                        });
-                    });
+                    order.getOrderedProducts().forEach(orderDetails -> productList.forEach(product -> {
+                        if (product.getId().equals(orderDetails.getProduct().getId())) {
+                            product.setQuantity(product.getQuantity() + orderDetails.getQuantity());
+                        }
+                    }));
                     productList.forEach(this.productService::update);
                 }
             }

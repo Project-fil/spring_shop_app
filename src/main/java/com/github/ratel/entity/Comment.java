@@ -26,6 +26,8 @@ import java.util.Objects;
 @Where(clause = "is_removed=false")
 public class Comment implements Serializable {
 
+    // TODO: 18.01.2024 create functional for thos class
+
     @Transient
     private static final long serialVersionUID = 818395152219333330L;
 

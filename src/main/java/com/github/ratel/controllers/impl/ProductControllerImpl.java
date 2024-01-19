@@ -12,17 +12,20 @@ import com.github.ratel.payload.response.ProductResponse;
 import com.github.ratel.services.FileService;
 import com.github.ratel.services.ProductService;
 import com.github.ratel.services.SubcategoryService;
+import com.github.ratel.utils.EntityUtil;
 import com.github.ratel.utils.transfer_object.ProductTransferObj;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
-import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,24 +45,33 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
 
     @Override
     @CrossOrigin("*")
-    public ResponseEntity<List<ProductResponse>> findAll(long subcategoryId) {
+    public ResponseEntity<Page<ProductResponse>> findAll(
+            long subcategoryId,
+            int page,
+            int size,
+            String sortBy,
+            String sortDirection
+    ) {
         Subcategory subcategory = this.subcategoryService.findById(subcategoryId);
-        return ResponseEntity.ok(
-                this.productService.findAllInSubcategory(subcategory).stream()
-                        .map(ProductTransferObj::fromLazyProduct)
-                        .collect(Collectors.toList())
-        );
+        Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return ResponseEntity.ok(this.productService.findAllInSubcategory(subcategory, pageRequest)
+                .map(ProductTransferObj::fromLazyProduct));
     }
 
     @Override
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<List<ProductResponse>> findAllForAdmin() {
-        return ResponseEntity.ok(
-                this.productService.findAllForAdmin().stream()
-                        .map(ProductTransferObj::fromLazyProduct)
-                        .collect(Collectors.toList())
-        );
+    public ResponseEntity<Page<ProductResponse>> findAllForAdmin(
+            int page,
+            int size,
+            String sortBy,
+            String sortDirection
+    ) {
+        Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return ResponseEntity.ok(this.productService.findAllForAdmin(pageRequest)
+                .map(ProductTransferObj::fromLazyProduct));
     }
 
     @Override
@@ -72,15 +84,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
     public ResponseEntity<ProductResponse> findByIdForAdmin(long id) {
-        Product getProduct = null;
-        try {
-            getProduct = this.productService.findById(id);
-        } catch (Exception ignore) {
-        }
-        if (Objects.isNull(getProduct)) {
-            getProduct = this.productService.findByIdForAdmin(id);
-        }
-        return ResponseEntity.ok(ProductTransferObj.fromProductForAdmin(getProduct));
+        return ResponseEntity.ok(ProductTransferObj.fromProductForAdmin(this.productService.findByIdForAdmin(id)));
     }
 
     @Override
@@ -133,7 +137,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<ProductResponse> deleteFromImageList(long productId,  List<Long> imageIdsList) {
+    public ResponseEntity<ProductResponse> deleteFromImageList(long productId, List<Long> imageIdsList) {
         Product product = this.productService.findById(productId);
         if (Objects.nonNull(imageIdsList)) {
             Set<FileEntity> files = product.getFiles();

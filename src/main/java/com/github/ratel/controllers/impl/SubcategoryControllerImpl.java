@@ -12,7 +12,6 @@ import com.github.ratel.utils.EntityUtil;
 import com.github.ratel.utils.transfer_object.SubcategoryTransferObj;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -51,7 +50,7 @@ public class SubcategoryControllerImpl implements ApiSecurityHeader, Subcategory
     @Secured("ROLE_ADMIN")
     public ResponseEntity<List<SubcategoryResponse>> findAllForAdmin(long categoryId, int limit) {
         return ResponseEntity.ok(this.subcategoryService.findAllForAdmin(categoryId, limit).stream()
-                .map(SubcategoryTransferObj::fromSubcategoryForAdmin)
+                .map(SubcategoryTransferObj::fromSubcategory)
                 .collect(Collectors.toList()));
     }
 
@@ -64,7 +63,7 @@ public class SubcategoryControllerImpl implements ApiSecurityHeader, Subcategory
     @Override
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<SubcategoryResponse> getByIdForAdmin(long id) {
+    public ResponseEntity<SubcategoryResponse> findByIdForAdmin(long id) {
         return ResponseEntity.ok(
                 SubcategoryTransferObj.fromSubcategoryForAdmin(this.subcategoryService.getByIdForAdmin(id))
         );

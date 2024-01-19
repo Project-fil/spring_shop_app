@@ -14,21 +14,20 @@ import com.github.ratel.services.UserService;
 import com.github.ratel.utils.EntityUtil;
 import com.github.ratel.utils.transfer_object.UserTransferObj;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/app/shop/")
@@ -54,25 +53,31 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<List<UserResponse>> findAllActiveUsers(int page, int size, String sortBy, String sortDirection) {
+    public ResponseEntity<Page<UserResponse>> findAllActiveUsers(
+            int page,
+            int size,
+            String sortBy,
+            String sortDirection
+    ) {
         Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        List<UserResponse> userResponseList = this.userService.findAllUsers(pageRequest).get()
-                .map(UserTransferObj::fromLazyUser)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(userResponseList);
+        return ResponseEntity.ok(this.userService.findAllUsers(pageRequest)
+                .map(UserTransferObj::fromLazyUser));
     }
 
     @Override
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<List<UserResponse>> findAllUsersForAdmin(int page, int size, String sortBy, String sortDir) {
-        Sort.Direction direction = EntityUtil.getSortDirection(sortDir);
+    public ResponseEntity<Page<UserResponse>> findAllUsersForAdmin(
+            int page,
+            int size,
+            String sortBy,
+            String sortDirection
+    ) {
+        Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        List<UserResponse> userResponseList = this.userService.findAllUsersForAdmin(pageRequest).get()
-                .map(UserTransferObj::fromUserForAdmin)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(userResponseList);
+        return ResponseEntity.ok(this.userService.findAllUsersForAdmin(pageRequest)
+                .map(UserTransferObj::fromUserForAdmin));
     }
 
     @Override
