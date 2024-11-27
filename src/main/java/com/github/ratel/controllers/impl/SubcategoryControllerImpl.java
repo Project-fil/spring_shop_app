@@ -2,20 +2,15 @@ package com.github.ratel.controllers.impl;
 
 import com.github.ratel.controllers.ApiSecurityHeader;
 import com.github.ratel.controllers.interfaces.SubcategoryController;
-import com.github.ratel.entity.Category;
-import com.github.ratel.entity.Subcategory;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.SubcategoryResponse;
-import com.github.ratel.services.CategoryService;
 import com.github.ratel.services.SubcategoryService;
 import com.github.ratel.utils.EntityUtil;
 import com.github.ratel.utils.transfer_object.SubcategoryTransferObj;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,23 +19,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
-@CrossOrigin("*")
 @RequiredArgsConstructor
 @RequestMapping("/app/shop/")
 @RestController(value = "subcategoryControllerAdmin")
 public class SubcategoryControllerImpl implements ApiSecurityHeader, SubcategoryController {
 
-    private final CategoryService categoryService;
-
     private final SubcategoryService subcategoryService;
 
     @Override
+    @CrossOrigin("*")
     public ResponseEntity<List<SubcategoryResponse>> findAll(long categoryId, String sortBy, String sortDirection) {
-        Category category = this.categoryService.findById(categoryId);
-        Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
-        Sort sort = Sort.by(direction, sortBy);
-        return ResponseEntity.ok(this.subcategoryService.findAllByCategory(category, sort).stream()
+        Sort sort = EntityUtil.getSort(sortBy, sortDirection);
+        return ResponseEntity.ok(this.subcategoryService.findAllByCategory(categoryId, sort).stream()
                 .map(SubcategoryTransferObj::fromLazySubcategory)
                 .collect(Collectors.toList()));
     }
@@ -70,24 +60,21 @@ public class SubcategoryControllerImpl implements ApiSecurityHeader, Subcategory
     }
 
     @Override
-    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<SubcategoryResponse> createSubcategory(long categoryId, String name) {
-        Category category = this.categoryService.findById(categoryId);
-        Subcategory subcategory = new Subcategory();
-        subcategory.setName(name);
-        subcategory.setCategory(category);
-        return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(this.subcategoryService.create(subcategory)));
+        return ResponseEntity.ok(
+                SubcategoryTransferObj.fromSubcategory(this.subcategoryService.create(categoryId, name))
+        );
     }
 
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<SubcategoryResponse> updateSubcategory(long subCategoryId, String name) {
-        Subcategory subcategory = this.subcategoryService.findById(subCategoryId);
-        subcategory.setName(name);
-        return ResponseEntity.ok(SubcategoryTransferObj.fromSubcategory(this.subcategoryService.update(subcategory)));
+        return ResponseEntity.ok(
+                SubcategoryTransferObj.fromSubcategory(this.subcategoryService.update(subCategoryId, name))
+        );
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.github.ratel.utils;
 
 import com.github.ratel.exceptions.NotValidException;
 import lombok.experimental.UtilityClass;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.Assert;
 
@@ -15,6 +16,16 @@ import java.util.Objects;
 
 @UtilityClass
 public class EntityUtil {
+
+    public static PageRequest getPageRequest(int page, int size, String sortBy, String sortDirection) {
+        Sort.Direction direction = getSortDirection(sortDirection);
+        return PageRequest.of(page, size, Sort.by(direction, sortBy));
+    }
+
+    public static Sort getSort(String sortBy, String sortDirection) {
+        Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
+        return Sort.by(direction, sortBy);
+    }
 
     public static Sort.Direction getSortDirection(String sortDir) {
         return sortDir.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;

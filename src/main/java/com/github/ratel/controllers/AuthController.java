@@ -13,19 +13,16 @@ import com.github.ratel.security.JwtTokenProvider;
 import com.github.ratel.security.UserDetailsImpl;
 import com.github.ratel.services.AuthService;
 import com.github.ratel.utils.transfer_object.UserTransferObj;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/app/shop/")
 public class AuthController {
 

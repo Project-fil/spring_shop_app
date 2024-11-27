@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface SubcategoryService {
 
-    List<Subcategory> findAllByCategory(Category category, Sort sort);
+    List<Subcategory> findAllByCategory(long categoryId, Sort sort);
 
     List<Subcategory> findAllForAdmin(long categoryId, int limit);
 
@@ -18,9 +18,9 @@ public interface SubcategoryService {
 
     Subcategory getByIdForAdmin(long id);
 
-    Subcategory create(Subcategory subcategory);
+    Subcategory create(long categoryId, String name);
 
-    Subcategory update(Subcategory subcategory);
+    Subcategory update(long subCategoryId, String name);
 
     void delete(long id);
 }

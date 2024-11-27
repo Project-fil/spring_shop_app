@@ -50,12 +50,15 @@ public interface ProductController {
 
     @PutMapping(value = "product/image/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ProductResponse> addToImageList(
-            @RequestParam("id") Long id,
+            @RequestParam("productId") long productId,
             @RequestPart(value = "file", required = false) List<MultipartFile> files
     );
 
     @DeleteMapping("product/image/delete/{productId}")
-    ResponseEntity<ProductResponse> deleteFromImageList(@PathVariable long productId, @RequestBody List<Long> imageIdsList);
+    ResponseEntity<ProductResponse> deleteFromImageList(
+            @PathVariable long productId,
+            @RequestBody List<Long> imageIdsList
+    );
 
     @DeleteMapping("product/delete/{id}")
     ResponseEntity<MessageResponse> delete(@PathVariable long id);

@@ -6,7 +6,7 @@ import com.github.ratel.payload.request.CreateUserRequest;
 
 public interface AuthService {
 
-    User createUser(Roles roles, CreateUserRequest payload);
+    User createUser(Roles role, CreateUserRequest payload);
 
     User verificationUser(String token);
 

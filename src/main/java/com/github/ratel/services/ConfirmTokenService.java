@@ -8,5 +8,4 @@ public interface ConfirmTokenService {
 
     ConfirmToken create(ConfirmToken confirmToken);
 
-    ConfirmToken update(ConfirmToken confirmToken);
 }

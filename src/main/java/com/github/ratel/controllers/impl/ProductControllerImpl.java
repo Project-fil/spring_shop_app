@@ -2,22 +2,16 @@ package com.github.ratel.controllers.impl;
 
 import com.github.ratel.controllers.ApiSecurityHeader;
 import com.github.ratel.controllers.interfaces.ProductController;
-import com.github.ratel.entity.FileEntity;
 import com.github.ratel.entity.Product;
-import com.github.ratel.entity.Subcategory;
-import com.github.ratel.handlers.FileHandler;
 import com.github.ratel.payload.request.ProductRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.ProductResponse;
-import com.github.ratel.services.FileService;
 import com.github.ratel.services.ProductService;
-import com.github.ratel.services.SubcategoryService;
 import com.github.ratel.utils.EntityUtil;
 import com.github.ratel.utils.transfer_object.ProductTransferObj;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,22 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.List;
 
-@CrossOrigin("*")
 @RequiredArgsConstructor
 @RequestMapping("/app/shop/")
 @RestController(value = "productControllerAdmin")
 public class ProductControllerImpl implements ApiSecurityHeader, ProductController {
 
-    private final FileHandler fileHandler;
-
-    private final FileService fileService;
-
     private final ProductService productService;
-
-    private final SubcategoryService subcategoryService;
 
     @Override
     @CrossOrigin("*")
@@ -52,10 +39,8 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
             String sortBy,
             String sortDirection
     ) {
-        Subcategory subcategory = this.subcategoryService.findById(subcategoryId);
-        Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        return ResponseEntity.ok(this.productService.findAllInSubcategory(subcategory, pageRequest)
+        PageRequest pageRequest = EntityUtil.getPageRequest(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(this.productService.findAllInSubcategory(subcategoryId, pageRequest)
                 .map(ProductTransferObj::fromLazyProduct));
     }
 
@@ -68,8 +53,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
             String sortBy,
             String sortDirection
     ) {
-        Sort.Direction direction = EntityUtil.getSortDirection(sortDirection);
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        PageRequest pageRequest = EntityUtil.getPageRequest(page, size, sortBy, sortDirection);
         return ResponseEntity.ok(this.productService.findAllForAdmin(pageRequest)
                 .map(ProductTransferObj::fromLazyProduct));
     }
@@ -88,22 +72,10 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     }
 
     @Override
-    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<ProductResponse> create(ProductRequest productRequest, List<MultipartFile> files) {
-        Subcategory subcategory = this.subcategoryService.findById(productRequest.getSubcategoryId());
-        Product product = ProductTransferObj.toProduct(new Product(), productRequest);
-        Set<FileEntity> newFiles = new HashSet<>();
-        if (Objects.nonNull(files)) {
-            newFiles = files.stream()
-                    .map(this.fileHandler::writeFile)
-                    .map(this.fileService::create)
-                    .collect(Collectors.toSet());
-        }
-        product.setFiles(newFiles);
-        product.setSubcategory(subcategory);
-        return ResponseEntity.ok(ProductTransferObj.fromProduct(this.productService.create(product)));
+        return ResponseEntity.ok(ProductTransferObj.fromProduct(this.productService.create(productRequest, files)));
     }
 
     @Override
@@ -111,25 +83,15 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<ProductResponse> update(long id, ProductRequest productRequest) {
-        Product product = this.productService.findById(id);
-        product = ProductTransferObj.updateProduct(product, productRequest);
-        return ResponseEntity.ok(ProductTransferObj.fromProduct(this.productService.update(product)));
+        return ResponseEntity.ok(ProductTransferObj.fromProduct(this.productService.editProduct(id, productRequest)));
     }
 
     @Override
     @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
-    public ResponseEntity<ProductResponse> addToImageList(Long id, List<MultipartFile> files) {
-        Product product = this.productService.findById(id);
-        if (Objects.nonNull(files)) {
-            Set<FileEntity> filesList = files.stream()
-                    .map(this.fileHandler::writeFile)
-                    .map(this.fileService::create)
-                    .collect(Collectors.toSet());
-            product.getFiles().addAll(filesList);
-            this.productService.update(product);
-        }
+    public ResponseEntity<ProductResponse> addToImageList(long productId, List<MultipartFile> files) {
+        Product product = this.productService.addImageToImageList(productId, files);
         return ResponseEntity.ok(ProductTransferObj.fromLazyProduct(product));
     }
 
@@ -138,17 +100,7 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<ProductResponse> deleteFromImageList(long productId, List<Long> imageIdsList) {
-        Product product = this.productService.findById(productId);
-        if (Objects.nonNull(imageIdsList)) {
-            Set<FileEntity> files = product.getFiles();
-            Set<FileEntity> filesForRemove = files.stream()
-                    .filter(fileEntity -> imageIdsList.contains(fileEntity.getId()))
-                    .collect(Collectors.toSet());
-            files.removeAll(filesForRemove);
-            product.setFiles(files);
-            imageIdsList.forEach(this.fileService::deleteById);
-            this.productService.update(product);
-        }
+        Product product = this.productService.deleteImagesFromImageList(productId, imageIdsList);
         return ResponseEntity.ok(ProductTransferObj.fromLazyProduct(product));
     }
 
