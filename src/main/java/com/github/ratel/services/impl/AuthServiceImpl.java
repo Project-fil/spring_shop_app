@@ -50,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User userAuth(String email, String password) {
         return this.userService.findByEmailAndPassword(email, password);
     }

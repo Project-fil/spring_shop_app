@@ -1,6 +1,7 @@
 package com.github.ratel.services;
 
 import com.github.ratel.entity.Order;
+import com.github.ratel.payload.request.OrderRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,9 +17,9 @@ public interface OrderService {
 
     Order findByIdForAdmin(Long id);
 
-    Order create(Order order);
+    Order create(OrderRequest orderRequest);
 
-    Order update(Order order);
+    Order update(Long id, String status);
 
     void delete(long id);
 

@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,7 +78,6 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     }
 
     @Override
-    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<ProductResponse> update(long id, ProductRequest productRequest) {
@@ -87,7 +85,6 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     }
 
     @Override
-    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<ProductResponse> addToImageList(long productId, List<MultipartFile> files) {
@@ -96,7 +93,6 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     }
 
     @Override
-    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<ProductResponse> deleteFromImageList(long productId, List<Long> imageIdsList) {
@@ -105,7 +101,6 @@ public class ProductControllerImpl implements ApiSecurityHeader, ProductControll
     }
 
     @Override
-    @Transactional
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<MessageResponse> delete(long id) {

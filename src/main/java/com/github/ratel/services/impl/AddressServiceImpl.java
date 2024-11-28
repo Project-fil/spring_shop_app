@@ -37,12 +37,6 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public Address update(Address address) {
-        return this.addressRepository.save(address);
-    }
-
-    @Override
-    @Transactional
     public Address updateWithUser(Address address, User user) {
         address.addUser(user);
         return this.addressRepository.save(address);

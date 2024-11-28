@@ -84,6 +84,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product editProduct(long id, ProductRequest productRequest) {
         Product product = this.findById(id);
         ProductTransferObj.updateProduct(product, productRequest);
@@ -91,6 +92,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product addImageToImageList(long id, List<MultipartFile> files) {
         if (Objects.isNull(files)) {
             throw new NullPointerException("List files in addImageToImageList() is null");
@@ -106,6 +108,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product deleteImagesFromImageList(long productId, List<Long> imageIdsList) {
         if (Objects.isNull(imageIdsList)) {
             throw new NullPointerException("List imageIdsList in deleteImagesFromImageList() is null");
@@ -123,11 +126,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product update(Product product) {
         return this.productRepository.save(product);
     }
 
     @Override
+    @Transactional
     public void deleteById(long id) {
         this.productRepository.deleteById(id);
     }

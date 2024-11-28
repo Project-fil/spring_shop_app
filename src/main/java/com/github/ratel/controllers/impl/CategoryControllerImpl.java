@@ -21,8 +21,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
-@CrossOrigin("*")
 @RequiredArgsConstructor
 @RequestMapping("/app/shop/")
 @RestController(value = "categoryControllerAdmin")
@@ -66,18 +64,14 @@ public class CategoryControllerImpl implements ApiSecurityHeader, CategoryContro
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<CategoryResponse> createCategory(String name) {
-        return ResponseEntity.ok(CategoryTransferObj.fromCategory(
-                this.categoryService.createCategory(new Category(name)))
-        );
+        return ResponseEntity.ok(CategoryTransferObj.fromCategory(this.categoryService.createCategory(name)));
     }
 
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
     public ResponseEntity<CategoryResponse> updateCategory(long id, String name) {
-        Category category = this.categoryService.findById(id);
-        category.setName(name);
-        return ResponseEntity.ok(CategoryTransferObj.fromCategory(this.categoryService.updateCategory(category)));
+        return ResponseEntity.ok(CategoryTransferObj.fromCategory(this.categoryService.updateCategory(id, name)));
     }
 
     @Override

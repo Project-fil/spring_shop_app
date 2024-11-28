@@ -11,8 +11,6 @@ public interface AddressService {
 
     Address save(Address address);
 
-    Address update(Address address);
-
     Address updateWithUser(Address address, User user);
 
     void delete(Long id);

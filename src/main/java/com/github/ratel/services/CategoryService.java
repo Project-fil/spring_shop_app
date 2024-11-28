@@ -15,9 +15,9 @@ public interface CategoryService {
 
     Category getByIdForAdmin(long id);
 
-    Category createCategory(Category category);
+    Category createCategory(String name);
 
-    Category updateCategory(Category category);
+    Category updateCategory(long id, String name);
 
     void deleteCategoryById(long id);
 }
