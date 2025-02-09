@@ -12,16 +12,16 @@ import java.security.Principal;
 @SecurityRequirement(name = "Authorization")
 public interface CartController {
 
-    @GetMapping("cart")
+    @GetMapping("current-cart")
     ResponseEntity<CartResponse> findUserCartById(Principal principal);
 
-    @GetMapping("cart/{cartId}")
+    @GetMapping("/{cartId}")
     ResponseEntity<CartResponse> findUserCartById(@PathVariable long cartId);
 
-    @PutMapping("cart/update/")
+    @PutMapping()
     ResponseEntity<CartResponse> updateUserCart(@RequestBody CartRequest cartRequest);
 
-    @DeleteMapping("cart/delete/{userId}")
+    @DeleteMapping("/user/{userId}")
     ResponseEntity<MessageResponse> deleteByUserId(@PathVariable long userId);
 
 }

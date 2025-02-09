@@ -22,8 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Date;
 import java.util.List;
 
+import static com.github.ratel.utils.ApiPathConstants.API_PREFIX;
+
 @RequiredArgsConstructor
-@RequestMapping("/app/shop/")
+@RequestMapping(API_PREFIX)
 @RestController(value = "productControllerAdmin")
 public class ProductControllerImpl implements ApiSecurityHeader, ProductController {
 

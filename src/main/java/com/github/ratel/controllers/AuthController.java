@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.github.ratel.utils.ApiPathConstants.API_PREFIX;
+
 @Slf4j
 @RestController
-@RequestMapping("/app/shop/")
+@RequestMapping(API_PREFIX)
 public class AuthController {
 
     @Autowired

@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.github.ratel.utils.ApiPathConstants.API_PREFIX;
+import static com.github.ratel.utils.ApiPathConstants.MANAGER;
+
 @CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("manager/")
+@RequestMapping(API_PREFIX + MANAGER)
 public class ManagerControllerImpl implements ApiSecurityHeader, ManagerController {
 
 }

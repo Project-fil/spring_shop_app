@@ -16,10 +16,10 @@ import java.security.Principal;
 @SecurityRequirement(name = "Authorization")
 public interface UserController {
 
-    @GetMapping("user")
+    @GetMapping("current-user")
     ResponseEntity<UserResponse> getCurrentUser(Principal principal);
 
-    @GetMapping("/user/all")
+    @GetMapping()
     ResponseEntity<Page<UserResponse>> findAllActiveUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -27,7 +27,7 @@ public interface UserController {
             @RequestParam(defaultValue = "asc") String sortDirection
     );
 
-    @GetMapping("/user/all/admin")
+    @GetMapping("/admin/all")
     ResponseEntity<Page<UserResponse>> findAllUsersForAdmin(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -41,7 +41,7 @@ public interface UserController {
     @GetMapping("admin/{userId}")
     ResponseEntity<UserResponse> getUserByIdForAdmin(@PathVariable Long userId);
 
-    @PutMapping(value = "user/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UserResponse> update(
             @Valid @RequestPart("body") UserUpdateRequest updateRequest,
             @RequestPart(value = "image", required = false) MultipartFile image

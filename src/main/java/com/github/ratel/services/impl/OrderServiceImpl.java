@@ -88,16 +88,16 @@ public class OrderServiceImpl implements OrderService {
     //     TODO change orderStatus from string on enum
     @Override
     @Transactional
-    public Order update(Long id, String status) {
+    public Order update(Long id, OrderStatus status) {
         if (status == null) {
             throw new NullPointerException("Status can't be null in update() class OrderServiceImpl");
         }
         Order order = this.findById(id);
-        OrderStatus orderStatus = OrderStatus.valueOf(status);
         if (order.getOrderStatus().equals(OrderStatus.SENT) || order.getOrderStatus().equals(OrderStatus.SUCCESS)) {
             throw new AppException("The parcel has already been sent");
         }
-        if (orderStatus.equals(OrderStatus.REJECTED)) {
+        if (status.equals(OrderStatus.REJECTED)) {
+//            TODO create method rollback products count
             List<Long> productsIds = order.getOrderedProducts().stream()
                     .map(OrderDetails::getProduct)
                     .map(Product::getId)
@@ -110,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
             }));
             productList.forEach(this.productService::update);
         }
-        order.setOrderStatus(orderStatus);
+        order.setOrderStatus(status);
         return this.orderRepository.save(order);
     }
 

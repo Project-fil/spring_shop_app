@@ -1,5 +1,6 @@
 package com.github.ratel.controllers.impl;
 
+import com.github.ratel.config.anotation.FreeAPIEndpoint;
 import com.github.ratel.controllers.ApiSecurityHeader;
 import com.github.ratel.controllers.interfaces.CategoryController;
 import com.github.ratel.entity.Category;
@@ -21,8 +22,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.github.ratel.utils.ApiPathConstants.API_PREFIX;
+import static com.github.ratel.utils.ApiPathConstants.CATEGORY;
+
 @RequiredArgsConstructor
-@RequestMapping("/app/shop/")
+@RequestMapping(API_PREFIX)
 @RestController(value = "categoryControllerAdmin")
 public class CategoryControllerImpl implements ApiSecurityHeader, CategoryController {
 

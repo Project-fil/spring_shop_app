@@ -1,5 +1,6 @@
 package com.github.ratel.controllers.interfaces;
 
+import com.github.ratel.entity.enums.OrderStatus;
 import com.github.ratel.payload.request.OrderRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.OrderResponse;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "Authorization")
 public interface OrderController {
 
-    @GetMapping("order/find/all")
+    @GetMapping()
     ResponseEntity<Page<OrderResponse>> findAllByUser(
             @RequestParam long userId,
             @RequestParam(defaultValue = "0") int page,
@@ -21,7 +22,7 @@ public interface OrderController {
 
     );
 
-    @GetMapping("order/find/admin/all")
+    @GetMapping("/admin/all")
     ResponseEntity<Page<OrderResponse>> findAllByUserForAdmin(
             @RequestParam long userId,
             @RequestParam(defaultValue = "0") int page,
@@ -31,19 +32,19 @@ public interface OrderController {
 
     );
 
-    @GetMapping("order/find/id/{id}")
+    @GetMapping("/{id}")
     ResponseEntity<OrderResponse> findById(@PathVariable() Long id);
 
-    @GetMapping("order/find/admin/id/{id}")
+    @GetMapping("/admin/orderId/{id}")
     ResponseEntity<OrderResponse> findByIdForAdmin(@PathVariable() Long id);
 
-    @PostMapping("order/create")
-    ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest);
+    @PostMapping()
+    ResponseEntity<OrderResponse> create(@RequestBody OrderRequest orderRequest);
 
-    @PutMapping("order/update/{id}/{status}")
-    ResponseEntity<OrderResponse> updateOrder(@PathVariable("id") Long id, @PathVariable("status") String status);
+    @PutMapping("/{id}")
+    ResponseEntity<OrderResponse> updateStatus(@PathVariable("id") Long id, @RequestBody OrderStatus status);
 
-    @DeleteMapping("order/delete/{id}")
+    @DeleteMapping()
     ResponseEntity<MessageResponse> deleteOrder(@PathVariable Long id);
 
 }

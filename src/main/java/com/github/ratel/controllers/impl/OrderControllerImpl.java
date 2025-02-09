@@ -1,10 +1,12 @@
 package com.github.ratel.controllers.impl;
 
 import com.github.ratel.controllers.interfaces.OrderController;
+import com.github.ratel.entity.enums.OrderStatus;
 import com.github.ratel.payload.request.OrderRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.OrderResponse;
 import com.github.ratel.services.OrderService;
+import com.github.ratel.utils.ApiPathConstants;
 import com.github.ratel.utils.EntityUtil;
 import com.github.ratel.utils.transfer_object.OrderTransferObj;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 
+import static com.github.ratel.utils.ApiPathConstants.API_PREFIX;
+import static com.github.ratel.utils.ApiPathConstants.ORDER;
+
 @RequiredArgsConstructor
-@RequestMapping("/app/shop/")
+@RequestMapping(API_PREFIX + ORDER)
 @RestController(value = "orderControllerAdminImpl")
 public class OrderControllerImpl implements OrderController {
 
@@ -77,7 +82,7 @@ public class OrderControllerImpl implements OrderController {
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<OrderResponse> createOrder(OrderRequest orderRequest) {
+    public ResponseEntity<OrderResponse> create(OrderRequest orderRequest) {
         return ResponseEntity.ok(OrderTransferObj.fromLazyOrder(this.orderService.create(orderRequest)));
     }
 
@@ -85,7 +90,7 @@ public class OrderControllerImpl implements OrderController {
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
-    public ResponseEntity<OrderResponse> updateOrder(Long id, String status) {
+    public ResponseEntity<OrderResponse> updateStatus(Long id, OrderStatus status) {
         return ResponseEntity.ok(OrderTransferObj.fromLazyOrder(this.orderService.update(id, status)));
     }
 

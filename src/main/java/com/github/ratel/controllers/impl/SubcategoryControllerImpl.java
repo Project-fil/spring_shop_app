@@ -5,6 +5,7 @@ import com.github.ratel.controllers.interfaces.SubcategoryController;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.SubcategoryResponse;
 import com.github.ratel.services.SubcategoryService;
+import com.github.ratel.utils.ApiPathConstants;
 import com.github.ratel.utils.EntityUtil;
 import com.github.ratel.utils.transfer_object.SubcategoryTransferObj;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.github.ratel.utils.ApiPathConstants.API_PREFIX;
+
 @RequiredArgsConstructor
-@RequestMapping("/app/shop/")
+@RequestMapping(API_PREFIX)
 @RestController(value = "subcategoryControllerAdmin")
 public class SubcategoryControllerImpl implements ApiSecurityHeader, SubcategoryController {
 

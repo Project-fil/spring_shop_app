@@ -1,6 +1,7 @@
 package com.github.ratel.services;
 
 import com.github.ratel.entity.Order;
+import com.github.ratel.entity.enums.OrderStatus;
 import com.github.ratel.payload.request.OrderRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ public interface OrderService {
 
     Order create(OrderRequest orderRequest);
 
-    Order update(Long id, String status);
+    Order update(Long id, OrderStatus status);
 
     void delete(long id);
 

@@ -5,6 +5,7 @@ import com.github.ratel.payload.request.CartRequest;
 import com.github.ratel.payload.response.CartResponse;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.services.CartService;
+import com.github.ratel.utils.ApiPathConstants;
 import com.github.ratel.utils.transfer_object.CartTransferObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.Date;
 
+import static com.github.ratel.utils.ApiPathConstants.API_PREFIX;
+import static com.github.ratel.utils.ApiPathConstants.CART;
+
 @RestController
-@RequestMapping("/app/shop/")
+@RequestMapping(API_PREFIX + CART)
 @RequiredArgsConstructor
 public class CartControllerImpl implements CartController {
 

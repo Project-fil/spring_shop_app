@@ -19,7 +19,7 @@ import com.github.ratel.services.FileService;
 import com.github.ratel.services.UserService;
 import com.github.ratel.utils.CheckUtil;
 import com.github.ratel.utils.transfer_object.UserTransferObj;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,7 +31,6 @@ import java.security.Principal;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -40,6 +39,17 @@ public class UserServiceImpl implements UserService {
     private final FileHandler fileHandler;
     private final AddressService addressService;
     private final PasswordEncoder passwordEncoder;
+
+    @Lazy
+    public UserServiceImpl(UserRepository userRepository, CartService cartService, FileService fileService,
+                           FileHandler fileHandler, AddressService addressService, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.cartService = cartService;
+        this.fileService = fileService;
+        this.fileHandler = fileHandler;
+        this.addressService = addressService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     @Transactional(readOnly = true)

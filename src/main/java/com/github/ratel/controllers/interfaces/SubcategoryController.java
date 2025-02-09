@@ -8,32 +8,34 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.github.ratel.utils.ApiPathConstants.SUBCATEGORY;
+
 @SecurityRequirement(name = "Authorization")
 public interface SubcategoryController {
 
-    @GetMapping("free/subcategory/all")
+    @GetMapping("/free" + SUBCATEGORY)
     ResponseEntity<List<SubcategoryResponse>> findAll(
             @RequestParam long categoryId,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     );
 
-    @GetMapping("subcategory/all/admin/{categoryId}/{limit}")
+    @GetMapping(SUBCATEGORY + "/admin/category/{categoryId}/all/{limit}")
     ResponseEntity<List<SubcategoryResponse>> findAllForAdmin(@PathVariable long categoryId, @PathVariable int limit);
 
-    @GetMapping("free/subcategory/id/{id}")
+    @GetMapping("/free" + SUBCATEGORY + "{id}")
     ResponseEntity<SubcategoryResponse> findById(@PathVariable long id);
 
-    @GetMapping("subcategory/admin/id/{id}")
+    @GetMapping(SUBCATEGORY + "/admin/subcategory/{id}")
     ResponseEntity<SubcategoryResponse> findByIdForAdmin(@PathVariable long id);
 
-    @PostMapping("subcategory/create/{categoryId}/{name}")
-    ResponseEntity<SubcategoryResponse> createSubcategory(@PathVariable long categoryId, @PathVariable String name);
+    @PostMapping(SUBCATEGORY + "/category/{categoryId}")
+    ResponseEntity<SubcategoryResponse> createSubcategory(@PathVariable long categoryId, @RequestBody String name);
 
-    @PutMapping("subcategory/update/{subCategoryId}}/{name}")
-    ResponseEntity<SubcategoryResponse> updateSubcategory(@PathVariable long subCategoryId, @PathVariable String name);
+    @PutMapping(SUBCATEGORY + "/{subCategoryId}}")
+    ResponseEntity<SubcategoryResponse> updateSubcategory(@PathVariable long subCategoryId, @RequestBody String name);
 
-    @DeleteMapping("subcategory/delete")
+    @DeleteMapping(SUBCATEGORY)
     ResponseEntity<MessageResponse> deleteSubcategory(@RequestParam long id);
 
 }

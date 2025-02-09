@@ -23,8 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.security.Principal;
 import java.util.Date;
 
+import static com.github.ratel.utils.ApiPathConstants.API_PREFIX;
+import static com.github.ratel.utils.ApiPathConstants.USER;
+
 @RestController
-@RequestMapping("/app/shop/")
+@RequestMapping(API_PREFIX + USER)
 @RequiredArgsConstructor
 public class UserControllerImpl implements ApiSecurityHeader, UserController {
 

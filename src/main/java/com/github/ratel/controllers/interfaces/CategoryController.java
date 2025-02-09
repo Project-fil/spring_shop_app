@@ -1,5 +1,6 @@
 package com.github.ratel.controllers.interfaces;
 
+import com.github.ratel.config.anotation.FreeAPIEndpoint;
 import com.github.ratel.payload.response.CategoryResponse;
 import com.github.ratel.payload.response.MessageResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -8,31 +9,33 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.github.ratel.utils.ApiPathConstants.CATEGORY;
+
 @SecurityRequirement(name = "Authorization")
 public interface CategoryController {
 
-    @GetMapping("free/category/all")
+    @GetMapping("free/categories")
     ResponseEntity<List<CategoryResponse>> findAllCategory(
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     );
 
-    @GetMapping("category/admin/{limit}")
+    @GetMapping(CATEGORY + "/admin/{limit}")
     ResponseEntity<List<CategoryResponse>> findAllCategoryForAdmin(@PathVariable int limit);
 
-    @GetMapping("free/category/id/{id}")
+    @GetMapping("free/categories/{id}")
     ResponseEntity<CategoryResponse> findById(@PathVariable Long id);
 
-    @GetMapping("category/admin/id/{id}")
+    @GetMapping(CATEGORY + "/admin/categoriesId/{id}")
     ResponseEntity<CategoryResponse> findByIdForAdmin(@PathVariable Long id);
 
-    @PostMapping("category/create/{name}")
-    ResponseEntity<CategoryResponse> createCategory(@PathVariable String name);
+    @PostMapping(CATEGORY)
+    ResponseEntity<CategoryResponse> createCategory(@RequestBody String name);
 
-    @PutMapping("category/update/{id}/{name}")
-    ResponseEntity<CategoryResponse> updateCategory(@PathVariable long id, @PathVariable String name);
+    @PutMapping(CATEGORY + "/{id}")
+    ResponseEntity<CategoryResponse> updateCategory(@PathVariable long id, @RequestBody String name);
 
-    @DeleteMapping("category/delete")
-    ResponseEntity<MessageResponse> deleteCategory(@RequestParam long id);
+    @DeleteMapping(CATEGORY + "/{id}")
+    ResponseEntity<MessageResponse> deleteCategory(@PathVariable long id);
 
 }

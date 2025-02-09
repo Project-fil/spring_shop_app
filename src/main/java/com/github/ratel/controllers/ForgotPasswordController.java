@@ -1,12 +1,12 @@
 package com.github.ratel.controllers;
 
-import com.github.ratel.payload.request.ForgotPassRequest;
 import com.github.ratel.entity.ConfirmToken;
 import com.github.ratel.entity.User;
 import com.github.ratel.exceptions.EntityNotFoundException;
 import com.github.ratel.exceptions.InvalidTokenException;
 import com.github.ratel.exceptions.WrongUserEmail;
 import com.github.ratel.exceptions.statuscode.StatusCode;
+import com.github.ratel.payload.request.ForgotPassRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.services.ConfirmTokenService;
 import com.github.ratel.services.SendGridMailService;
@@ -25,9 +25,11 @@ import javax.validation.Valid;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.github.ratel.utils.ApiPathConstants.API_PREFIX;
+
 @Slf4j
 @RestController
-@RequestMapping("app/shop/")
+@RequestMapping(API_PREFIX)
 @RequiredArgsConstructor
 public class ForgotPasswordController {
 
