@@ -5,6 +5,7 @@ import com.github.ratel.entity.OrderDetails;
 import com.github.ratel.entity.Product;
 import com.github.ratel.exceptions.AppException;
 import com.github.ratel.payload.response.OrderResponse;
+import com.github.ratel.payload.response.OrderStatisticResponse;
 import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
@@ -41,10 +42,23 @@ public class OrderTransferObj {
                         .map(OrderDetailsTransferObj::fromOrderDetails)
                         .collect(Collectors.toSet())
         );
-        response.setUserResponse(UserTransferObj.fromLazyUser(payload.getUser()));
+        response.setUserResponse(UserTransferObj.fromLazyUserWithAddress(payload.getUser()));
         response.setNote(payload.getNote());
         response.setOrderStatus(payload.getOrderStatus().name());
         response.setRemoved(payload.isRemoved());
+        response.setLastModifiedDate(payload.getLastModifiedDate().toString());
+        response.setCreatedDate(payload.getCreatedDate().toString());
+        return response;
+    }
+
+    public static OrderStatisticResponse fromOrderToStatistic(Order payload) {
+        OrderStatisticResponse response = new OrderStatisticResponse();
+        response.setId(payload.getId());
+        response.setUserId(payload.getUser().getId());
+        response.setTotalAmount(payload.getTotalAmount().toString());
+        response.setTotal(payload.getOrderedProducts().stream().mapToInt(OrderDetails::getQuantity).sum());
+        response.setNote(payload.getNote());
+        response.setOrderStatus(payload.getOrderStatus().toString());
         response.setLastModifiedDate(payload.getLastModifiedDate().toString());
         response.setCreatedDate(payload.getCreatedDate().toString());
         return response;

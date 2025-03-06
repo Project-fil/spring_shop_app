@@ -44,6 +44,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
+    public Page<Order> findAllByOrderStatus(OrderStatus status, Pageable pageable) {
+        return this.orderRepository.findAllByOrderStatusAndRemovedFalse(status, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Order> findAllByUserAndOrderStatus(Long userId, OrderStatus status, Pageable pageable) {
+        return this.orderRepository.findAllByUserIdAndOrderStatusAndRemovedFalse(userId, status, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<Order> findAllForAdmin(Long userId, Pageable pageable) {
         return this.orderRepository.findAllByUserIdAndRemovedTrue(userId, pageable);
     }
@@ -85,7 +97,6 @@ public class OrderServiceImpl implements OrderService {
         return finalOrder;
     }
 
-    //     TODO change orderStatus from string on enum
     @Override
     @Transactional
     public Order update(Long id, OrderStatus status) {
@@ -97,7 +108,6 @@ public class OrderServiceImpl implements OrderService {
             throw new AppException("The parcel has already been sent");
         }
         if (status.equals(OrderStatus.REJECTED)) {
-//            TODO create method rollback products count
             List<Long> productsIds = order.getOrderedProducts().stream()
                     .map(OrderDetails::getProduct)
                     .map(Product::getId)

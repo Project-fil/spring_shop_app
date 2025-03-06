@@ -3,7 +3,6 @@ package com.github.ratel.controllers.interfaces;
 import com.github.ratel.payload.request.ProductRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.ProductResponse;
-import com.github.ratel.utils.ApiPathConstants;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;

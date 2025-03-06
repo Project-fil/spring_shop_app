@@ -5,7 +5,6 @@ import com.github.ratel.payload.request.CartRequest;
 import com.github.ratel.payload.response.CartResponse;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.services.CartService;
-import com.github.ratel.utils.ApiPathConstants;
 import com.github.ratel.utils.transfer_object.CartTransferObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

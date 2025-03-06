@@ -4,8 +4,6 @@ public class ApiPathConstants {
 
     public static final String API_PREFIX =  "/app/shop";
 
-    public static final String ADMIN = "/admins";
-    public static final String MANAGER = "/manager";
     public static final String USER = "/users";
     public static final String CART = "/carts";
     public static final String ORDER = "/orders";

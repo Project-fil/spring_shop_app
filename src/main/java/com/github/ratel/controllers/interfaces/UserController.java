@@ -1,7 +1,9 @@
 package com.github.ratel.controllers.interfaces;
 
+import com.github.ratel.payload.filter.StatisticFilter;
 import com.github.ratel.payload.request.UserUpdateRequest;
 import com.github.ratel.payload.response.MessageResponse;
+import com.github.ratel.payload.response.UserOrdersStatisticResponse;
 import com.github.ratel.payload.response.UserResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Page;
@@ -40,6 +42,15 @@ public interface UserController {
 
     @GetMapping("admin/{userId}")
     ResponseEntity<UserResponse> getUserByIdForAdmin(@PathVariable Long userId);
+
+    @PostMapping("/total-spend")
+    ResponseEntity<Page<UserOrdersStatisticResponse>> findTotalSpendAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestBody() StatisticFilter filter
+    );
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UserResponse> update(

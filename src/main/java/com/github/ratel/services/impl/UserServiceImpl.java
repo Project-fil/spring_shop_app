@@ -10,6 +10,7 @@ import com.github.ratel.exceptions.ConfirmPasswordException;
 import com.github.ratel.exceptions.EntityNotFoundException;
 import com.github.ratel.exceptions.statuscode.StatusCode;
 import com.github.ratel.handlers.FileHandler;
+import com.github.ratel.payload.filter.StatisticFilter;
 import com.github.ratel.payload.request.CreateUserRequest;
 import com.github.ratel.payload.request.UserUpdateRequest;
 import com.github.ratel.repositories.UserRepository;
@@ -19,6 +20,7 @@ import com.github.ratel.services.FileService;
 import com.github.ratel.services.UserService;
 import com.github.ratel.utils.CheckUtil;
 import com.github.ratel.utils.transfer_object.UserTransferObj;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -67,6 +72,30 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Page<User> findAllUsersForAdmin(Pageable pageable) {
         return this.userRepository.findAllByRemovedTrue(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<User> findTotalSpendAll(StatisticFilter filter, Pageable pageable) {
+        if (ObjectUtils.anyNull(filter, pageable)) {
+            throw new NullPointerException("Invalid parameters value: filter(%s), pageable(%s)");
+        }
+        Date dateFrom;
+        Date dateTo;
+        if (Objects.nonNull(filter.getFromDate())) {
+            dateFrom = filter.getFromDate();
+        } else {
+            dateFrom = Date.from(LocalDate.now().withDayOfYear(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        }
+        if (Objects.nonNull(filter.getToDate())) {
+            dateTo = filter.getToDate();
+        } else {
+            dateTo = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        }
+        if (Objects.nonNull(filter.getUserIdSet()) && ObjectUtils.isNotEmpty(filter.getUserIdSet())) {
+            return this.userRepository.findAllByUsersFilter(filter.getUserIdSet(), dateFrom, dateTo, pageable);
+        }
+        return this.userRepository.findAllByDateFilter(dateFrom, dateTo, pageable);
     }
 
     @Override

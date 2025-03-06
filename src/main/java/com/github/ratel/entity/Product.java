@@ -42,10 +42,8 @@ public class Product implements Serializable {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    // TODO: 16.01.2024 Is it need this another one table
-
     @ToString.Exclude
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH}, orphanRemoval = true)
     @JoinTable(
             name = "product_files",
             joinColumns = @JoinColumn(name = "product_id"),

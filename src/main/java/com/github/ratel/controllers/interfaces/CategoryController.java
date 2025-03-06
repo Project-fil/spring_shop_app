@@ -1,6 +1,5 @@
 package com.github.ratel.controllers.interfaces;
 
-import com.github.ratel.config.anotation.FreeAPIEndpoint;
 import com.github.ratel.payload.response.CategoryResponse;
 import com.github.ratel.payload.response.MessageResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

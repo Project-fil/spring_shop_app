@@ -60,7 +60,7 @@ public class User implements Serializable {
     private Cart cart;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.DETACH}, fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
 
     @ToString.Exclude

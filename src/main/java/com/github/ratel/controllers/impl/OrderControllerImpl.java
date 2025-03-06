@@ -5,8 +5,8 @@ import com.github.ratel.entity.enums.OrderStatus;
 import com.github.ratel.payload.request.OrderRequest;
 import com.github.ratel.payload.response.MessageResponse;
 import com.github.ratel.payload.response.OrderResponse;
+import com.github.ratel.payload.response.OrderStatisticResponse;
 import com.github.ratel.services.OrderService;
-import com.github.ratel.utils.ApiPathConstants;
 import com.github.ratel.utils.EntityUtil;
 import com.github.ratel.utils.transfer_object.OrderTransferObj;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +63,37 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @CrossOrigin("*")
+    @Secured({"ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<Page<OrderStatisticResponse>> findOrdersByStatus(
+            OrderStatus status,
+            int page,
+            int size,
+            String sortBy,
+            String sortDirection
+    ) {
+        PageRequest pageRequest = EntityUtil.getPageRequest(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(this.orderService.findAllByOrderStatus(status, pageRequest)
+                .map(OrderTransferObj::fromOrderToStatistic));
+    }
+
+    @Override
+    @CrossOrigin("*")
+    @Secured({"ROLE_MANAGER", "ROLE_ADMIN"})
+    public ResponseEntity<Page<OrderStatisticResponse>> findUserByOrderStatus(
+            long userId,
+            OrderStatus status,
+            int page,
+            int size,
+            String sortBy,
+            String sortDirection
+    ) {
+        PageRequest pageRequest = EntityUtil.getPageRequest(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(this.orderService.findAllByUserAndOrderStatus(userId, status, pageRequest)
+                .map(OrderTransferObj::fromOrderToStatistic));
+    }
+
+    @Override
+    @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
     public ResponseEntity<OrderResponse> findById(Long id) {
         return ResponseEntity.ok(OrderTransferObj.fromOrder(
@@ -86,7 +117,6 @@ public class OrderControllerImpl implements OrderController {
         return ResponseEntity.ok(OrderTransferObj.fromLazyOrder(this.orderService.create(orderRequest)));
     }
 
-    //     TODO change orderStatus from string on enum
     @Override
     @CrossOrigin("*")
     @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})

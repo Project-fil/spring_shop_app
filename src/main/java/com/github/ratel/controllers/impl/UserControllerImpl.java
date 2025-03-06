@@ -3,8 +3,10 @@ package com.github.ratel.controllers.impl;
 import com.github.ratel.controllers.ApiSecurityHeader;
 import com.github.ratel.controllers.interfaces.UserController;
 import com.github.ratel.entity.User;
+import com.github.ratel.payload.filter.StatisticFilter;
 import com.github.ratel.payload.request.UserUpdateRequest;
 import com.github.ratel.payload.response.MessageResponse;
+import com.github.ratel.payload.response.UserOrdersStatisticResponse;
 import com.github.ratel.payload.response.UserResponse;
 import com.github.ratel.services.UserService;
 import com.github.ratel.utils.EntityUtil;
@@ -81,6 +83,21 @@ public class UserControllerImpl implements ApiSecurityHeader, UserController {
     @Secured("ROLE_ADMIN")
     public ResponseEntity<UserResponse> getUserByIdForAdmin(Long userId) {
         return ResponseEntity.ok(UserTransferObj.fromUserForAdmin(this.userService.findUserForAdmin(userId)));
+    }
+
+    @Override
+    @CrossOrigin("*")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<Page<UserOrdersStatisticResponse>> findTotalSpendAll(
+            int page,
+            int size,
+            String sortBy,
+            String sortDirection,
+            StatisticFilter filter
+    ) {
+        PageRequest pageRequest = EntityUtil.getPageRequest(page, size, sortBy, sortDirection);
+        return ResponseEntity.ok(this.userService.findTotalSpendAll(filter, pageRequest)
+                .map(UserTransferObj::fromUserToStatistic));
     }
 
     @Override

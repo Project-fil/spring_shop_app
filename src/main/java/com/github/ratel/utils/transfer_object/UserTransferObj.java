@@ -4,6 +4,7 @@ import com.github.ratel.entity.Order;
 import com.github.ratel.entity.User;
 import com.github.ratel.payload.request.UserUpdateRequest;
 import com.github.ratel.payload.response.OrderResponse;
+import com.github.ratel.payload.response.UserOrdersStatisticResponse;
 import com.github.ratel.payload.response.UserResponse;
 import com.github.ratel.utils.EntityUtil;
 import lombok.experimental.UtilityClass;
@@ -23,6 +24,17 @@ public class UserTransferObj {
         response.setImage(FileTransferObj.fromFile(payload.getFileEntity()));
         response.setRole(payload.getRoles());
         response.setVerification(payload.getVerification());
+        return response;
+    }
+
+    public static UserResponse fromLazyUserWithAddress(User payload) {
+        UserResponse response = new UserResponse();
+        response.setId(payload.getId());
+        response.setFirstname(payload.getFirstname());
+        response.setLastname(payload.getLastname());
+        response.setEmail(payload.getEmail());
+        response.setAddress(AddressTransferObj.fromLazyAddress(payload.getAddress()));
+        response.setRole(payload.getRoles());
         return response;
     }
 
@@ -71,6 +83,27 @@ public class UserTransferObj {
         return response;
     }
 
+    public static UserOrdersStatisticResponse fromUserToStatistic(User payload) {
+        UserOrdersStatisticResponse response = new UserOrdersStatisticResponse();
+        response.setUserId(payload.getId());
+        response.setFullName(String.format("%s %s", payload.getFirstname(), payload.getLastname()));
+        response.setEmail(payload.getEmail());
+        response.setAddress(AddressTransferObj.fromLazyAddress(payload.getAddress()));
+        response.setRole(payload.getRoles());
+        response.setTotalNumberItems(payload.getOrders().size());
+        response.setTotalAmountSpent(
+                String.valueOf(payload.getOrders().stream()
+                .mapToDouble(order -> order.getTotalAmount().doubleValue())
+                .sum())
+        );
+        response.setOrderStatisticResponseSet(
+                payload.getOrders().stream()
+                .map(OrderTransferObj::fromOrderToStatistic)
+                .collect(Collectors.toSet())
+        );
+        return response;
+    }
+
     public static void updateUser(User user, UserUpdateRequest payload) {
         user.setFirstname(EntityUtil.updateField(user.getFirstname(), payload.getFirstname()));
         user.setLastname(EntityUtil.updateField(user.getLastname(), payload.getLastname()));
@@ -78,8 +111,10 @@ public class UserTransferObj {
         user.getAddress().setCountry(EntityUtil.updateField(user.getAddress().getCountry(), payload.getCountry()));
         user.getAddress().setCity(EntityUtil.updateField(user.getAddress().getCity(), payload.getCity()));
         user.getAddress().setStreet(EntityUtil.updateField(user.getAddress().getStreet(), payload.getStreet()));
-        user.getAddress().setHouseNumber(EntityUtil.updateField(user.getAddress().getHouseNumber(), payload.getHouseNumber()));
-        user.getAddress().setApartmentNumber(EntityUtil.updateField(user.getAddress().getApartmentNumber(), payload.getApartmentNumber()));
+        user.getAddress().setHouseNumber(
+                EntityUtil.updateField(user.getAddress().getHouseNumber(), payload.getHouseNumber()));
+        user.getAddress().setApartmentNumber(
+                EntityUtil.updateField(user.getAddress().getApartmentNumber(), payload.getApartmentNumber()));
     }
 
     private static List<OrderResponse> ifExist(List<Order> orders) {
