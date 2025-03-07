@@ -16,6 +16,7 @@ import com.github.ratel.services.UserService;
 import com.github.ratel.utils.transfer_object.OrderDetailsTransferObj;
 import com.github.ratel.utils.transfer_object.OrderTransferObj;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,30 +41,46 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public Page<Order> findAllByUser(Long userId, Pageable pageable) {
+        if (ObjectUtils.anyNull(userId, pageable)) {
+            throw new AppException("Invalid parameters value: userId(%s), pageable(%s)", userId, pageable);
+        }
         return this.orderRepository.findAllByUserIdAndRemovedFalse(userId, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Order> findAllByOrderStatus(OrderStatus status, Pageable pageable) {
+        if (ObjectUtils.anyNull(status, pageable)) {
+            throw new AppException("Invalid parameters value: status(%s), pageable(%s)", status, pageable);
+        }
         return this.orderRepository.findAllByOrderStatusAndRemovedFalse(status, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Order> findAllByUserAndOrderStatus(Long userId, OrderStatus status, Pageable pageable) {
+        if (ObjectUtils.anyNull(userId, status, pageable)) {
+            throw new AppException(
+                    "Invalid parameters value: userId(%s), status(%s), pageable(%s)", userId, status, pageable);
+        }
         return this.orderRepository.findAllByUserIdAndOrderStatusAndRemovedFalse(userId, status, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Order> findAllForAdmin(Long userId, Pageable pageable) {
+        if (ObjectUtils.anyNull(userId, pageable)) {
+            throw new AppException("Invalid parameters value: userId(%s), pageable(%s)", userId, pageable);
+        }
         return this.orderRepository.findAllByUserIdAndRemovedTrue(userId, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Order findById(Long id) {
+        if (Objects.isNull(id)) {
+            throw new AppException("Invalid parameters value: id(%s)", id);
+        }
         return this.orderRepository.findByIdAndRemovedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
     }
@@ -70,6 +88,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public Order findByIdForAdmin(Long id) {
+        if (Objects.isNull(id)) {
+            throw new AppException("Invalid parameters value: id(%s)", id);
+        }
         return this.orderRepository.findByIdForAdmin(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
     }
@@ -77,6 +98,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order create(OrderRequest orderRequest) {
+        if (Objects.isNull(orderRequest)) {
+            throw new AppException("Invalid parameters value: orderRequest(%s)", orderRequest);
+        }
         Order order = new Order();
         List<Product> productList = this.productService.findListForIds(new ArrayList<>(orderRequest.getProducts().keySet()));
         OrderTransferObj.ifExistProductQuantity(productList, orderRequest.getProducts());
@@ -100,8 +124,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order update(Long id, OrderStatus status) {
-        if (status == null) {
-            throw new NullPointerException("Status can't be null in update() class OrderServiceImpl");
+        if (ObjectUtils.anyNull(id, status)) {
+            throw new AppException("Invalid parameters value: id(%s), status(%s)", id, status);
         }
         Order order = this.findById(id);
         if (order.getOrderStatus().equals(OrderStatus.SENT) || order.getOrderStatus().equals(OrderStatus.SUCCESS)) {
@@ -126,7 +150,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void delete(long id) {
+    public void delete(Long id) {
+        if (Objects.isNull(id)) {
+            throw new AppException("Invalid parameters value: id(%s)", id);
+        }
         this.orderRepository.deleteById(id);
     }
+
 }

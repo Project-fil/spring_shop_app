@@ -9,12 +9,12 @@ public interface CartService {
 
     Cart findUserCartByUser(Principal principal);
 
-    Cart findById(long id);
+    Cart findById(Long id);
 
     Cart create(Cart cart);
 
     Cart update(CartRequest cartRequest);
 
-    void deleteCartByUserId(long userId);
+    void deleteCartByUserId(Long userId);
 
 }

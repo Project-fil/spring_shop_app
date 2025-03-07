@@ -2,7 +2,6 @@ package com.github.ratel.payload.response;
 
 import lombok.*;
 
-import java.util.Date;
 import java.util.Set;
 
 @Getter

@@ -1,7 +1,6 @@
 package com.github.ratel.services;
 
 import com.github.ratel.entity.Product;
-import com.github.ratel.entity.Subcategory;
 import com.github.ratel.payload.request.ProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,25 +10,26 @@ import java.util.List;
 
 public interface ProductService {
 
-    Page<Product> findAllInSubcategory(long subcategoryId, Pageable pageable);
+    Page<Product> findAllInSubcategory(Long subcategoryId, Pageable pageable);
 
     List<Product> findListForIds(List<Long> products);
 
     Page<Product> findAllForAdmin(Pageable pageable);
 
-    Product findById(long id);
+    Product findById(Long id);
 
-    Product findByIdForAdmin(long id);
+    Product findByIdForAdmin(Long id);
 
     Product create(ProductRequest productRequest, List<MultipartFile> files);
 
-    Product editProduct(long id, ProductRequest productRequest);
+    Product editProduct(Long id, ProductRequest productRequest);
 
-    Product addImageToImageList(long id, List<MultipartFile> files);
+    Product addImageToImageList(Long id, List<MultipartFile> files);
 
-    Product deleteImagesFromImageList(long productId, List<Long> imageIdsList);
+    Product deleteImagesFromImageList(Long productId, List<Long> imageIdsList);
 
     Product update(Product product);
 
-    void deleteById(long id);
+    void deleteById(Long id);
+
 }

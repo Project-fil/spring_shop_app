@@ -8,9 +8,9 @@ import java.util.Set;
 
 public interface OrderDetailsService {
 
-    List<OrderDetails> findAllByOrderId(long orderId);
+    List<OrderDetails> findAllByOrderId(Long orderId);
 
-    OrderDetails findById(long id);
+    OrderDetails findById(Long id);
 
     Set<OrderDetails> saveOrderDetailsSet(Set<OrderDetails> orderDetailsSet, Order order);
 
@@ -18,6 +18,6 @@ public interface OrderDetailsService {
 
     OrderDetails update(OrderDetails orderDetails);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 
 }

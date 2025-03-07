@@ -2,7 +2,6 @@ package com.github.ratel.payload.request;
 
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter

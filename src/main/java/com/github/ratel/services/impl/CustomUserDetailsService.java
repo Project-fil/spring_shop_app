@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
         return UserDetailsImpl.fromUserToCustomUserDetails(userRepository.findByEmailAndRemovedFalse(username)
-                .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден")));
+                .orElseThrow(() -> new EntityNotFoundException("User not found")));
     }
 
     public UserDetailsImpl loadUserByLongId(Long userId) throws UsernameNotFoundException {

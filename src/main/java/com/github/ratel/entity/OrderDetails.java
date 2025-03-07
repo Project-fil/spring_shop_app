@@ -5,11 +5,9 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
@@ -21,7 +19,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE order_details SET is_removed = true WHERE id=?")
-//@Where(clause = "is_removed=false")
 public class OrderDetails implements Serializable {
 
     @Transient

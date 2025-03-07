@@ -11,13 +11,14 @@ public interface CategoryService {
 
     List<Category> findAllCategoryForAdmin(int limit);
 
-    Category findById(long id);
+    Category findById(Long id);
 
-    Category getByIdForAdmin(long id);
+    Category getByIdForAdmin(Long id);
 
     Category createCategory(String name);
 
-    Category updateCategory(long id, String name);
+    Category updateCategory(Long id, String name);
 
-    void deleteCategoryById(long id);
+    void deleteCategoryById(Long id);
+
 }

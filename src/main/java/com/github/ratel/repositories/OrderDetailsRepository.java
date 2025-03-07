@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Long> {
 
-    // TODO: 16.01.2024 if this methods need please test it or delete
-
     List<OrderDetails> findAllByOrderIdAndRemovedFalse(long orderId);
 
     Optional<OrderDetails> findByIdAndRemovedFalse(long id);

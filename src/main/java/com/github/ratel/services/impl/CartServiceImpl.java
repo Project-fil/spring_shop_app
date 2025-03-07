@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -34,18 +35,29 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional(readOnly = true)
-    public Cart findById(long id) {
+    public Cart findById(Long id) {
+        if (Objects.isNull(id)) {
+            throw new AppException("Invalid parameters value: id(%s)", id);
+        }
         return this.cartRepository.findByIdAndRemovedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
     }
 
     @Override
     @Transactional
-    public Cart create(Cart cart) { return this.cartRepository.save(cart); }
+    public Cart create(Cart cart) {
+        if (Objects.isNull(cart)) {
+            throw new AppException("Invalid parameters value: cart(%s)", cart);
+        }
+        return this.cartRepository.save(cart);
+    }
 
     @Override
     @Transactional
     public Cart update(CartRequest cartRequest) {
+        if (Objects.isNull(cartRequest)) {
+            throw new AppException("Invalid parameters value: cartRequest(%s)", cartRequest);
+        }
         Cart cart = this.findById(cartRequest.getId());
         Map<Product, Integer> cartMap = CartTransferObject.convertListProductToMap(
                 this.productService.findListForIds(new ArrayList<>(cartRequest.getProducts().keySet())),
@@ -66,7 +78,11 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void deleteCartByUserId(long userId) {
+    public void deleteCartByUserId(Long userId) {
+        if (Objects.isNull(userId)) {
+            throw new AppException("Invalid parameters value: userId(%s)", userId);
+        }
         this.cartRepository.deleteCartByUserId(userId);
     }
+
 }

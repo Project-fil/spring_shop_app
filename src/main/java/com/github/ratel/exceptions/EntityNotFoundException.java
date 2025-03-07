@@ -9,6 +9,10 @@ public class EntityNotFoundException extends RuntimeException {
     private Integer statusCode;
     private String message;
 
+    public EntityNotFoundException(String format, Object ... params) {
+        super(String.format(format, params));
+    }
+
     public EntityNotFoundException(StatusCode error) {
         this.statusCode = error.getCode();
         this.message = error.getMessage();

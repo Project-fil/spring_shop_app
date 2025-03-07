@@ -11,7 +11,6 @@ import lombok.experimental.UtilityClass;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -88,7 +87,7 @@ public class ProductTransferObj {
         if(Objects.isNull(comments)) {
             return List.of();
         }
-        return comments.stream().map(CommentsTransferObj::fromComment).collect(Collectors.toList());
+        return comments.stream().map(CommentTransferObj::fromComment).collect(Collectors.toList());
     }
 
     public static Product updateProduct(Product product, ProductRequest payload) {
@@ -106,4 +105,5 @@ public class ProductTransferObj {
         ));
         return product;
     }
+
 }

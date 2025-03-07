@@ -2,10 +2,8 @@ package com.github.ratel.security;
 
 import com.github.ratel.exceptions.InvalidTokenException;
 import io.jsonwebtoken.*;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

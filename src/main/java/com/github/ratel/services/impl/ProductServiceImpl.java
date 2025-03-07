@@ -3,6 +3,7 @@ package com.github.ratel.services.impl;
 import com.github.ratel.entity.FileEntity;
 import com.github.ratel.entity.Product;
 import com.github.ratel.entity.Subcategory;
+import com.github.ratel.exceptions.AppException;
 import com.github.ratel.exceptions.EntityNotFoundException;
 import com.github.ratel.handlers.FileHandler;
 import com.github.ratel.payload.request.ProductRequest;
@@ -12,6 +13,7 @@ import com.github.ratel.services.ProductService;
 import com.github.ratel.services.SubcategoryService;
 import com.github.ratel.utils.transfer_object.ProductTransferObj;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Product> findAllInSubcategory(long subcategoryId, Pageable pageable) {
+    public Page<Product> findAllInSubcategory(Long subcategoryId, Pageable pageable) {
+        if (ObjectUtils.anyNull(subcategoryId, pageable)) {
+            throw new AppException("Invalid parameters value: subcategoryId(%s), pageable(%s)", subcategoryId, pageable);
+        }
         Subcategory subcategory = this.subcategoryService.findById(subcategoryId);
         return this.productRepository.findAllBySubcategoryAndRemovedFalse(subcategory, pageable);
     }
@@ -43,25 +48,37 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public List<Product> findListForIds(List<Long> products) {
+        if (Objects.isNull(products)) {
+            throw new AppException("Invalid parameters value: products(%s)", products);
+        }
         return this.productRepository.findAllByListId(products);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Product> findAllForAdmin(Pageable pageable) {
+        if (Objects.isNull(pageable)) {
+            throw new AppException("Invalid parameters value: pageable(%s)", pageable);
+        }
         return this.productRepository.findAllByRemovedTrue(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Product findById(long id) {
+    public Product findById(Long id) {
+        if (Objects.isNull(id)) {
+            throw new AppException("Invalid parameters value: id(%s)", id);
+        }
         return this.productRepository.findByIdAndRemovedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Product findByIdForAdmin(long id) {
+    public Product findByIdForAdmin(Long id) {
+        if (Objects.isNull(id)) {
+            throw new AppException("Invalid parameters value: id(%s)", id);
+        }
         return this.productRepository.findByIdForAdmin(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
     }
@@ -69,6 +86,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product create(ProductRequest productRequest, List<MultipartFile> files) {
+        if (ObjectUtils.anyNull(productRequest, files)) {
+            throw new AppException("Invalid parameters value: productRequest or files");
+        }
         Subcategory subcategory = this.subcategoryService.findById(productRequest.getSubcategoryId());
         Product product = ProductTransferObj.toProduct(new Product(), productRequest);
         Set<FileEntity> newFiles = new HashSet<>();
@@ -85,7 +105,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product editProduct(long id, ProductRequest productRequest) {
+    public Product editProduct(Long id, ProductRequest productRequest) {
+        if (ObjectUtils.anyNull(id, productRequest)) {
+            throw new AppException("Invalid parameters value: id(%s) or productRequest", id);
+        }
         Product product = this.findById(id);
         ProductTransferObj.updateProduct(product, productRequest);
         return this.productRepository.save(product);
@@ -93,9 +116,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product addImageToImageList(long id, List<MultipartFile> files) {
-        if (Objects.isNull(files)) {
-            throw new NullPointerException("List files in addImageToImageList() is null");
+    public Product addImageToImageList(Long id, List<MultipartFile> files) {
+        if (ObjectUtils.anyNull(id, files)) {
+            throw new AppException("Invalid parameters value: id(%s) or fileList", id);
         }
 
         Product product = this.findById(id);
@@ -109,9 +132,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product deleteImagesFromImageList(long productId, List<Long> imageIdsList) {
-        if (Objects.isNull(imageIdsList)) {
-            throw new NullPointerException("List imageIdsList in deleteImagesFromImageList() is null");
+    public Product deleteImagesFromImageList(Long productId, List<Long> imageIdsList) {
+        if (ObjectUtils.anyNull(productId, imageIdsList)) {
+            throw new AppException("Invalid parameters value: productId(%s) or imageIdList", productId);
         }
 
         Product product = this.findById(productId);
@@ -128,12 +151,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product update(Product product) {
+        if (Objects.isNull(product)) {
+            throw new AppException("Invalid parameters value: product(%s)", product);
+        }
         return this.productRepository.save(product);
     }
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
+        if (Objects.isNull(id)) {
+            throw new AppException("Invalid parameters value: id(%s)", id);
+        }
         this.productRepository.deleteById(id);
     }
+
 }

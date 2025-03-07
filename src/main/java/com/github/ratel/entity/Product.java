@@ -61,6 +61,7 @@ public class Product implements Serializable {
     @Column(name = "brand")
     private String brand;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
@@ -89,12 +90,6 @@ public class Product implements Serializable {
         this.subcategory = subcategory;
         this.name = name;
         this.price = price;
-    }
-
-    public void addFile(FileEntity fileEntity) {
-        if (this.files.isEmpty())
-            this.files = new HashSet<>();
-        this.files.add(fileEntity);
     }
 
     public void addComment(Comment comment) {

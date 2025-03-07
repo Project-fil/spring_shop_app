@@ -1,5 +1,6 @@
 package com.github.ratel.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.github.ratel.entity.enums.Roles;
 import com.github.ratel.entity.enums.UserVerificationStatus;
 import lombok.*;
@@ -65,6 +66,7 @@ public class User implements Serializable {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -137,6 +139,11 @@ public class User implements Serializable {
         if (Objects.nonNull(fileEntity)) {
             this.fileEntity = fileEntity;
         }
+    }
+
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
     @Override

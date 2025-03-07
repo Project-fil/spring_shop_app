@@ -13,6 +13,4 @@ public interface AddressService {
 
     Address updateWithUser(Address address, User user);
 
-    void delete(Long id);
-
 }

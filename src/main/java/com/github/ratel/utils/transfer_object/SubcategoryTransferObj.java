@@ -45,16 +45,4 @@ public class SubcategoryTransferObj {
         return response;
     }
 
-
-//    public static SubcategoryResponse fromSubcategoryWithoutCategory(Subcategory payload) {
-//        return new SubcategoryResponse(
-//                payload.getId(),
-//                payload.getName(),
-//                payload.getProducts().stream().map(ProductTransferObject::fromProduct).collect(Collectors.toList()),
-//                payload.isRemoved(),
-//                payload.getCratedAt(),
-//                payload.getUpdatedAt()
-//        );
-//    }
-
 }

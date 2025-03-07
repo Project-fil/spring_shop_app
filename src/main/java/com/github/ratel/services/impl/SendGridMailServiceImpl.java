@@ -1,5 +1,6 @@
 package com.github.ratel.services.impl;
 
+import com.github.ratel.exceptions.AppException;
 import com.github.ratel.services.SendGridMailService;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
@@ -8,6 +9,7 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,10 @@ public class SendGridMailServiceImpl implements SendGridMailService {
 
     @Override
     public void sendMessage(String toAddress, String subject, String text) {
+        if (ObjectUtils.anyNull(toAddress, subject, text)) {
+            throw new AppException(
+                    "Invalid parameters value: toAddress(%s), subject(%s), text(%s)", toAddress, subject, text);
+        }
         Email emailTo = new Email(toAddress);
         Email emailFrom = new Email(ADDRESS_FROM_SEND);
         Content content = new Content("text/plain", text);

@@ -13,4 +13,5 @@ public interface AuthService {
     User userAuth(String email, String password);
 
     void checkAdminIsExist();
+
 }

@@ -1,26 +1,24 @@
 package com.github.ratel.services;
 
-import com.github.ratel.entity.Category;
 import com.github.ratel.entity.Subcategory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
 public interface SubcategoryService {
 
-    List<Subcategory> findAllByCategory(long categoryId, Sort sort);
+    List<Subcategory> findAllByCategory(Long categoryId, Sort sort);
 
-    List<Subcategory> findAllForAdmin(long categoryId, int limit);
+    List<Subcategory> findAllForAdmin(Long categoryId, Integer limit);
 
-    Subcategory findById(long id);
+    Subcategory findById(Long id);
 
-    Subcategory getByIdForAdmin(long id);
+    Subcategory getByIdForAdmin(Long id);
 
-    Subcategory create(long categoryId, String name);
+    Subcategory create(Long categoryId, String name);
 
-    Subcategory update(long subCategoryId, String name);
+    Subcategory update(Long subCategoryId, String name);
 
-    void delete(long id);
+    void delete(Long id);
+
 }

@@ -1,5 +1,6 @@
 package com.github.ratel.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
-import org.springframework.data.annotation.CreatedBy;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,8 +26,6 @@ import java.util.Objects;
 @Where(clause = "is_removed=false")
 public class Comment implements Serializable {
 
-    // TODO: 18.01.2024 create functional for this class
-
     @Transient
     private static final long serialVersionUID = 818395152219333330L;
 
@@ -36,9 +34,9 @@ public class Comment implements Serializable {
     @Column(name = "id", nullable = false, columnDefinition = "BIGINT", unique = true)
     private Long id;
 
-    @CreatedBy
     @ManyToOne
     @JoinColumn(name = "author_id")
+    @JsonBackReference
     private User author;
 
     @ManyToOne
@@ -61,13 +59,6 @@ public class Comment implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-
-    public Comment(User author, Product product, String text, Date createdDate) {
-        this.author = author;
-        this.product = product;
-        this.text = text;
-        this.createdDate = createdDate;
-    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

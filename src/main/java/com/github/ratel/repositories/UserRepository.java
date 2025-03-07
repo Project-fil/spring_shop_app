@@ -15,7 +15,6 @@ import java.util.Set;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    //   @EntityGraph(attributePaths = {"address", "orders", "comments"})
     Optional<User> findByIdAndRemovedFalse(long id);
 
     Page<User> findAllByRemovedFalse(Pageable pageable);

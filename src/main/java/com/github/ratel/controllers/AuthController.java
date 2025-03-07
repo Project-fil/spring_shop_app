@@ -2,9 +2,6 @@ package com.github.ratel.controllers;
 
 import com.github.ratel.entity.User;
 import com.github.ratel.entity.enums.Roles;
-import com.github.ratel.entity.enums.UserVerificationStatus;
-import com.github.ratel.exceptions.UnverifiedException;
-import com.github.ratel.exceptions.statuscode.StatusCode;
 import com.github.ratel.payload.request.CreateUserRequest;
 import com.github.ratel.payload.request.UserAuthRequest;
 import com.github.ratel.payload.response.TokenResponse;
@@ -13,7 +10,6 @@ import com.github.ratel.security.JwtTokenProvider;
 import com.github.ratel.security.UserDetailsImpl;
 import com.github.ratel.services.AuthService;
 import com.github.ratel.utils.transfer_object.UserTransferObj;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -23,7 +19,6 @@ import javax.validation.Valid;
 
 import static com.github.ratel.utils.ApiPathConstants.API_PREFIX;
 
-@Slf4j
 @RestController
 @RequestMapping(API_PREFIX)
 public class AuthController {
@@ -38,23 +33,20 @@ public class AuthController {
     @PostMapping("free/create/admin")
     public ResponseEntity<Object> registrationAdmin(@RequestBody @Valid CreateUserRequest payload) {
         this.authService.checkAdminIsExist();
-        User user = this.authService.createUser(Roles.ROLE_ADMIN, payload);
-        return ResponseEntity.ok(UserTransferObj.fromUser(user));
+        return ResponseEntity.ok(UserTransferObj.fromUser(this.authService.createUser(Roles.ROLE_ADMIN, payload)));
     }
 
     @CrossOrigin("*")
     @Secured("ROLE_ADMIN")
     @PostMapping("/admin/create/manager")
     public ResponseEntity<UserResponse> createManager(CreateUserRequest payload) {
-        User user = this.authService.createUser(Roles.ROLE_MANAGER, payload);
-        return ResponseEntity.ok(UserTransferObj.fromUser(user));
+        return ResponseEntity.ok(UserTransferObj.fromUser(this.authService.createUser(Roles.ROLE_MANAGER, payload)));
     }
 
     @CrossOrigin("*")
     @PostMapping("free/registration")
     public ResponseEntity<Object> createUser(@RequestBody @Valid CreateUserRequest payload) {
-        User user = this.authService.createUser(Roles.ROLE_USER, payload);
-        return ResponseEntity.ok(UserTransferObj.fromUser(user));
+        return ResponseEntity.ok(UserTransferObj.fromUser(this.authService.createUser(Roles.ROLE_USER, payload)));
     }
 
     @CrossOrigin("*")
@@ -75,18 +67,14 @@ public class AuthController {
     @PostMapping("free/authorization")
     public ResponseEntity<Object> auth(@RequestBody @Valid UserAuthRequest userAuthRequest) {
         User user = this.authService.userAuth(userAuthRequest.getEmail(), userAuthRequest.getPassword());
-        if (user.getVerification().equals(UserVerificationStatus.UNVERIFIED)) {
-            throw new UnverifiedException(StatusCode.USER_NOT_VERIFIED);
-        } else {
-            return ResponseEntity.ok(
-                    new TokenResponse(
-                            this.tokenProvider.generateToken(UserDetailsImpl.fromUserToCustomUserDetails(user)),
-                            user.getId(),
-                            user.getFirstname(),
-                            user.getRoles()
-                    )
-            );
-        }
+        return ResponseEntity.ok(
+                new TokenResponse(
+                        this.tokenProvider.generateToken(UserDetailsImpl.fromUserToCustomUserDetails(user)),
+                        user.getId(),
+                        user.getFirstname(),
+                        user.getRoles()
+                )
+        );
     }
 
 }

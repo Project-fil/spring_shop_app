@@ -6,12 +6,14 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -74,6 +76,4 @@ public class Order implements Serializable {
     public int hashCode() {
         return getClass().hashCode();
     }
-
-
 }

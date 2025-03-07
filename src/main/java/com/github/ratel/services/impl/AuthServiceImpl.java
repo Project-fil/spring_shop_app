@@ -4,7 +4,10 @@ import com.github.ratel.entity.User;
 import com.github.ratel.entity.VerificationToken;
 import com.github.ratel.entity.enums.Roles;
 import com.github.ratel.entity.enums.UserVerificationStatus;
+import com.github.ratel.exceptions.AppException;
 import com.github.ratel.exceptions.EntityAlreadyExistException;
+import com.github.ratel.exceptions.UnverifiedException;
+import com.github.ratel.exceptions.statuscode.StatusCode;
 import com.github.ratel.payload.request.CreateUserRequest;
 import com.github.ratel.services.AuthService;
 import com.github.ratel.services.SendGridMailService;
@@ -12,9 +15,11 @@ import com.github.ratel.services.UserService;
 import com.github.ratel.services.VerificationTokenService;
 import com.github.ratel.utils.EmailText;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -29,6 +34,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public User createUser(Roles role, CreateUserRequest payload) {
+        if (ObjectUtils.anyNull(role, payload)) {
+            throw new AppException("Invalid parameters value: role(%s) or CreateUserRequest", role);
+        }
         User user = this.userService.createUser(role, payload);
         String token = (UUID.randomUUID().toString());
         this.verificationTokenService.create(new VerificationToken(user, token));
@@ -43,6 +51,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public User verificationUser(String token) {
+        if (Objects.isNull(token)) {
+            throw new AppException("Invalid parameter token value");
+        }
         VerificationToken vt = verificationTokenService.findByToken(token);
         User user = vt.getUser();
         this.userService.updateUser(user.setVerificationUser(UserVerificationStatus.VERIFIED));
@@ -52,7 +63,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional(readOnly = true)
     public User userAuth(String email, String password) {
-        return this.userService.findByEmailAndPassword(email, password);
+        User user = this.userService.findByEmailAndPassword(email, password);
+        this.checkVerification(user.getVerification());
+        return user;
     }
 
     @Override
@@ -62,4 +75,11 @@ public class AuthServiceImpl implements AuthService {
             throw new EntityAlreadyExistException("Administrator already exists");
         }
     }
+
+    private void checkVerification(UserVerificationStatus status) throws UnverifiedException {
+        if (Objects.nonNull(status) && status.equals(UserVerificationStatus.UNVERIFIED)) {
+            throw new UnverifiedException(StatusCode.USER_NOT_VERIFIED);
+        }
+    }
+
 }

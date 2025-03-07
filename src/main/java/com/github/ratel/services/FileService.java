@@ -6,6 +6,6 @@ public interface FileService {
 
     FileEntity create(FileEntity fileEntity);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 
 }

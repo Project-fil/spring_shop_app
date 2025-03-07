@@ -5,7 +5,6 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -59,13 +58,6 @@ public class Category implements Serializable {
 
     public Category(String name) {
         this.name = name;
-    }
-
-
-    public void addSubcategory(Subcategory subcategory) {
-        if (subcategories.isEmpty())
-            subcategories = new HashSet<>();
-        this.subcategories.add(subcategory);
     }
 
     @Override
